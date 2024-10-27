@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CartDetailRequest {
-
-    private Long cartDetailId;
+    private Long customerId;
     private Long applicationId;
 }

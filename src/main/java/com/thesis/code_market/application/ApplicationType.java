@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum ApplicationType {
+    APPLICATION,
+    TEMPLATE,
     GAME,
     WEB_BROWSERS,
     WORD_PROCESSING_SOFTWARE,

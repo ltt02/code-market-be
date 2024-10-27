@@ -2,6 +2,7 @@ package com.thesis.code_market.application;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.thesis.code_market.application_category.ApplicationCategory;
+import com.thesis.code_market.application_framework.ApplicationFramework;
 import com.thesis.code_market.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,7 @@ public class Application {
     @Column
     private String name;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
 
     @Column(precision = 10, scale = 2)
@@ -60,7 +61,7 @@ public class Application {
     private String images;
 
     @Column
-    private Short ratings;
+    private Double ratings;
 
     @Column
     private Long downloads;
@@ -80,4 +81,8 @@ public class Application {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "application_category_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_category_id", referencedColumnName = "id"))
     private List<ApplicationCategory> applicationCategoryList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = "application_framework_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_framework_id", referencedColumnName = "id"))
+    private ApplicationFramework applicationFramework;
 }

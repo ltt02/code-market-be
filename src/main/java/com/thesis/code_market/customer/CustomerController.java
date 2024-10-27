@@ -1,5 +1,7 @@
 package com.thesis.code_market.customer;
 
+import com.thesis.code_market.user.User;
+import com.thesis.code_market.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +32,7 @@ public class CustomerController {
 
     @GetMapping("/userName/{userName}")
     public ResponseEntity<?> getCustomerAccount(@PathVariable String userName) {
-        Customer customer = customerService.findByUserName(userName);
+        UserDTO customer = customerService.findByUserName(userName);
         if (customer == null) {
             return new ResponseEntity<>("This customer is not exist", HttpStatus.NOT_FOUND);
         }
@@ -62,32 +64,53 @@ public class CustomerController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
-        // Check if customer exists in the database
-        Customer existingCustomer = customerService.findByUserName(customer.getUserName());
+    public ResponseEntity<?> register(@RequestBody Customer customer) {
+        // Check if user already exists
+        UserDTO existingCustomer = customerService.findByUserName(customer.getUserName());
         if (existingCustomer != null) {
-            return new ResponseEntity<>("Customer existed", HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
         }
-        this.customerService.add(customer);
-        return new ResponseEntity<>(existingCustomer, HttpStatus.CREATED);
+
+        // Check if username and password are provided
+        if (customer.getUserName() == null || customer.getUserName().isEmpty() ||
+                customer.getPassword() == null || customer.getPassword().isEmpty()) {
+            return new ResponseEntity<>("Username and password are required", HttpStatus.BAD_REQUEST);
+        }
+
+        // Register user
+        customerService.add(customer);
+        return new ResponseEntity<>(customer, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginCustomer(@RequestBody Customer customer) {
-        // Check if customer exists in the database
-        Customer existingCustomer = customerService.findByUserName(customer.getUserName());
-        if (existingCustomer == null) {
+    public ResponseEntity<?> login(@RequestBody Customer customer) {
+        // Find user by username
+        UserDTO existingUserDTO = customerService.findByUserName(customer.getUserName());
+        if (existingUserDTO == null) {
             return new ResponseEntity<>("Customer not found", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(existingCustomer, HttpStatus.OK);
+
+        // Convert UserDTO to actual User object for password checking
+        User existingUser = customerService.findById(existingUserDTO.getId());
+        if (existingUser == null) {
+            return new ResponseEntity<>("Customer not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Validate password
+        if (!customerService.validatePassword(existingUser, customer.getPassword())) {
+            return new ResponseEntity<>("Invalid password", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Successful login
+        return new ResponseEntity<>(existingUserDTO, HttpStatus.OK);
     }
 
     @PostMapping("/loginGoogle")
     public ResponseEntity<?> loginGGCustomer(@RequestBody Customer customer) {
-        Customer existingCustomer = customerService.findByUserName(customer.getUserName());
+        UserDTO existingCustomer = customerService.findByUserName(customer.getUserName());
         if (existingCustomer == null) {
             this.customerService.add(customer);
-            Customer getNewCustomer = customerService.findByUserName(customer.getUserName());
+            UserDTO getNewCustomer = customerService.findByUserName(customer.getUserName());
             return new ResponseEntity<>(getNewCustomer, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(existingCustomer, HttpStatus.OK);

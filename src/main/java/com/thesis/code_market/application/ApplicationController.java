@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin(origins = "http://localhost:8081")
 @RestController
@@ -16,8 +17,16 @@ public class ApplicationController {
     ApplicationService applicationService;
 
     @GetMapping
-    public List<ApplicationDTO> getAllApplications() {
-        return this.applicationService.getAllApplications();
+    public ResponseEntity<?> getAllApplications() {
+        List<ApplicationDTO> allApplications = this.applicationService.getAllApplications();
+        List<ApplicationDTO> newApplications = this.applicationService.getTopNewApplications();
+        List<ApplicationDTO> mostDownloadedApplications = this.applicationService.getMostDownloadedApplications();
+        List<ApplicationDTO> mostSaleApplications = this.applicationService.getMostSaleApplication();
+        ApplicationResponseDTO responseDTO = new ApplicationResponseDTO(allApplications, newApplications, mostDownloadedApplications, mostSaleApplications);
+        if (Objects.isNull(responseDTO)) {
+            return new ResponseEntity<>("The list is null", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

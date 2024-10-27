@@ -2,6 +2,11 @@ package com.thesis.code_market.application;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,6 +21,9 @@ public class ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
+
+
     void addApplication(Application application) {
         this.applicationRepository.save(application);
     }
@@ -23,6 +31,24 @@ public class ApplicationService {
     List<ApplicationDTO> getAllApplications() {
         List<Application> applicationList = this.applicationRepository.findAll();
         return applicationList.stream().map(ApplicationDTO::new).toList();
+    }
+
+    List<ApplicationDTO> getTopNewApplications() {
+        Pageable topTen = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
+        List<Application> applicationListNew = this.applicationRepository.findAllByOrderByCreatedAtDesc(topTen);
+        return applicationListNew.stream().map(ApplicationDTO::new).toList();
+    }
+
+    List<ApplicationDTO> getMostDownloadedApplications() {
+        Pageable topTen = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "downloads"));
+        List<Application> applicationListMostDownloaded = this.applicationRepository.findAllByOrderByDownloadsDesc(topTen);
+        return applicationListMostDownloaded.stream().map(ApplicationDTO::new).toList();
+    }
+
+    List<ApplicationDTO> getMostSaleApplication() {
+        Pageable topTen = PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "price"));
+        List<Application> applicationListMostSale = this.applicationRepository.findAllByOrderByPriceAsc(topTen);
+        return applicationListMostSale.stream().map(ApplicationDTO::new).toList();
     }
 
     public Application findApplicationById(Long id) {

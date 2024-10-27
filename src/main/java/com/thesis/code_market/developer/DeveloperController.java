@@ -1,5 +1,7 @@
 package com.thesis.code_market.developer;
 
+import com.thesis.code_market.user.User;
+import com.thesis.code_market.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,65 +54,46 @@ public class DeveloperController {
         return new ResponseEntity<>("A developer with id=" + id + " is deleted successfully", HttpStatus.OK);
     }
 
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerCustomer(@RequestBody Developer developer) {
-//        // Check if customer exists in the database
-//        Developer existingDeveloper = developerService.findByUserName(developer.getUserName());
-//        if (existingDeveloper != null) {
-//            return new ResponseEntity<>("Customer existed", HttpStatus.CONFLICT);
-//        }
-//        this.developerService.add(developer);
-//        return new ResponseEntity<>(existingDeveloper, HttpStatus.CREATED);
-//    }
-//
-//    @PostMapping("/login")
-//    public ResponseEntity<?> loginCustomer(@RequestBody Developer developer) {
-//        // Check if customer exists in the database
-//        Developer existingDeveloper = developerService.findByUserName(developer.getUserName());
-//        if (existingDeveloper == null) {
-//            return new ResponseEntity<>("Customer not found", HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<>(existingDeveloper, HttpStatus.OK);
-//    }
-//
-//    @PostMapping("/loginGoogle")
-//    public ResponseEntity<?> loginGGCustomer(@RequestBody Developer developer) {
-//        Developer existingDeveloper = developerService.findByUserName(developer.getUserName());
-//        if (existingDeveloper == null) {
-//            this.developerService.add(developer);
-//            Developer getNewDeveloper = developerService.findByUserName(developer.getUserName());
-//            return new ResponseEntity<>(getNewDeveloper, HttpStatus.CREATED);
-//        }
-//        return new ResponseEntity<>(existingDeveloper, HttpStatus.OK);
-//    }
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody Developer developer) {
+        // Check if user already exists
+        UserDTO existingDeveloper = developerService.findByUserName(developer.getUserName());
+        if (existingDeveloper != null) {
+            return new ResponseEntity<>("Developer already exists", HttpStatus.CONFLICT);
+        }
 
-//    @PutMapping("/{id}/updateLockedStatus")
-//    public ResponseEntity<?> updateStatusCustomer(@PathVariable Long id) {
-//        Customer customer = customerService.findById(id);
-//        if (customer == null) {
-//            return new ResponseEntity<>("Customer not found", HttpStatus.NOT_FOUND);
-//        } else {
-//            if (this.customerService.updateCustomer(id, customer) != null) {
-//                customer = customerService.findById(id);
-//                return new ResponseEntity<>(customer, HttpStatus.OK);
-//            }
-//            return new ResponseEntity<>("Update failed",
-//                    HttpStatus.BAD_REQUEST);
-//        }
-//    }
-//
-//    @PutMapping("/{id}/updateInfo")
-//    public ResponseEntity<?> updateInfoCustomer(@PathVariable Long id, @RequestBody Customer customer) {
-//        if (customer == null) {
-//            return new ResponseEntity<>("Customer not found", HttpStatus.NOT_FOUND);
-//        } else {
-//            if (this.customerService.updateCustomerInfo(id, customer) != null) {
-//                customer = customerService.findById(id);
-//                return new ResponseEntity<>(customer, HttpStatus.OK);
-//            }
-//            return new ResponseEntity<>("Update failed",
-//                    HttpStatus.BAD_REQUEST);
-//        }
-//    }
+        // Check if username and password are provided
+        if (developer.getUserName() == null || developer.getUserName().isEmpty() ||
+                developer.getPassword() == null || developer.getPassword().isEmpty()) {
+            return new ResponseEntity<>("Username and password are required", HttpStatus.BAD_REQUEST);
+        }
+
+        // Register user
+        developerService.add(developer);
+        return new ResponseEntity<>(developer, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Developer developer) {
+        // Find user by username
+        UserDTO existingUserDTO = developerService.findByUserName(developer.getUserName());
+        if (existingUserDTO == null) {
+            return new ResponseEntity<>("Developer not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Convert UserDTO to actual User object for password checking
+        User existingUser = developerService.findById(existingUserDTO.getId());
+        if (existingUser == null) {
+            return new ResponseEntity<>("Developer not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Validate password
+        if (!developerService.validatePassword(existingUser, developer.getPassword())) {
+            return new ResponseEntity<>("Invalid password", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Successful login
+        return new ResponseEntity<>(existingUserDTO, HttpStatus.OK);
+    }
 
 }

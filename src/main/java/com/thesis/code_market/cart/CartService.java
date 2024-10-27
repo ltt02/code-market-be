@@ -1,6 +1,7 @@
 package com.thesis.code_market.cart;
 
 import com.thesis.code_market.application.Application;
+import com.thesis.code_market.application.ApplicationDTO;
 import com.thesis.code_market.application.ApplicationService;
 import com.thesis.code_market.user.UserService;
 import jakarta.transaction.Transactional;
@@ -26,15 +27,15 @@ public class CartService {
     @Autowired
     private UserService userService;
 
-    public CartDTO addApplicationToCart(Long applicationId, Long customerId, CartDetailRequest cartDetailRequest) {
+    public CartDTO addApplicationToCart(CartDetailRequest cartDetailRequest) {
         // Tìm hoặc tạo Cart cho customer
-        Cart cart = this.findOrCreateCartByCustomerId(customerId);
+        Cart cart = this.findOrCreateCartByCustomerId(cartDetailRequest.getCustomerId());
 
         // Tìm Application từ ID
-        Application application = this.applicationService.findApplicationById(applicationId);
+        Application application = this.applicationService.findApplicationById(cartDetailRequest.getApplicationId());
 
         if (application == null) {
-            throw new IllegalArgumentException("Application not found with id: " + applicationId);
+            throw new IllegalArgumentException("Application not found with id: " + cartDetailRequest.getApplicationId());
         }
 
         // Tạo mới hoặc cập nhật CartDetail
@@ -44,7 +45,7 @@ public class CartService {
 
 // Kiểm tra nếu CartDetail đã tồn tại
         CartDetail existingCartDetail = this.cartDetailRepository
-                .findByCartIdAndApplicationId(cart.getId(), applicationId)
+                .findByCartIdAndApplicationId(cart.getId(), cartDetailRequest.getApplicationId())
                 .orElse(null);
 
         if (existingCartDetail == null) {
@@ -72,7 +73,7 @@ public class CartService {
     public ArrayList<CartDetailDTO> getAllCartDetails(Long customerId) {
         Cart cart = this.findCartByCustomerId(customerId);
         return cart.getCartDetails().stream()
-                .map(cartDetail -> new CartDetailDTO(cartDetail.getId(), cartDetail.getCart().getId(), cartDetail.getApplication().getId()))
+                .map(cartDetail -> new CartDetailDTO(cartDetail.getId(), new ApplicationDTO(cartDetail.getApplication())))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -93,8 +94,7 @@ public class CartService {
         if (cartDetail != null) {
             return new CartDetailDTO(
                     cartDetail.getId(),
-                    cartDetail.getApplication().getId(),
-                    cartDetail.getCart().getId()
+                    new ApplicationDTO(cartDetail.getApplication())
             );
         }
         return null;

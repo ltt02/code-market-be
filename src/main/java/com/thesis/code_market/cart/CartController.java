@@ -15,10 +15,10 @@ public class CartController {
     CartService cartService;
 
     @PostMapping
-    public ResponseEntity<?> addApplicationToCart(@PathVariable Long customerId, @RequestBody CartDetailRequest cartDetailRequest) {
-        CartDTO cartDTO = cartService.addApplicationToCart(cartDetailRequest.getApplicationId(), customerId, cartDetailRequest);
+    public ResponseEntity<?> addApplicationToCart(@RequestBody CartDetailRequest cartDetailRequest) {
+        CartDTO cartDTO = cartService.addApplicationToCart(cartDetailRequest);
         if (cartDTO == null) {
-            return new ResponseEntity<>("This application is existed", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("This application is existed", HttpStatus.OK);
         }
         return new ResponseEntity<>(cartDTO, HttpStatus.CREATED);
     }

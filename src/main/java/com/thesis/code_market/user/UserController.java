@@ -27,7 +27,7 @@ public class UserController {
         if (userDTO == null) {
             return new ResponseEntity<>("This user is not exist", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(userDTO, HttpStatus.FOUND);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
 //    @PutMapping("/{id}")
@@ -41,7 +41,7 @@ public class UserController {
 
     @GetMapping("/username/{username}")
     public ResponseEntity<?> getUserById(@PathVariable String username) {
-        User user = userService.findByUserName(username);
+        UserDTO user = userService.findByUserName(username);
         if (user == null) {
             return new ResponseEntity<>("This user is not exist", HttpStatus.NOT_FOUND);
         }
@@ -51,7 +51,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody User user) {
-        User isExistedUser = this.userService.findByUserName(user.getUserName());
+        UserDTO isExistedUser = this.userService.findByUserName(user.getUserName());
         if (isExistedUser == null) {
             this.userService.add(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -70,9 +70,48 @@ public class UserController {
         return new ResponseEntity<>("A user with id=" + id + " is deleted successfully", HttpStatus.OK);
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
+        // Check if user already exists
+        UserDTO existingUser = userService.findByUserName(user.getUserName());
+        if (existingUser != null) {
+            return new ResponseEntity<>("Username already exists", HttpStatus.CONFLICT);
+        }
+
+        // Check if username and password are provided
+        if (user.getUserName() == null || user.getUserName().isEmpty() ||
+                user.getPassword() == null || user.getPassword().isEmpty()) {
+            return new ResponseEntity<>("Username and password are required", HttpStatus.BAD_REQUEST);
+        }
+
+        // Register user
+        userService.add(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User loginRequest) {
+        // Find user by username
+        UserDTO existingUserDTO = userService.findByUserName(loginRequest.getUserName());
+        if (existingUserDTO == null) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        // Convert UserDTO to actual User object for password checking
+        User existingUser = userService.findById(existingUserDTO.getId());
+
+        // Validate password
+        if (!userService.validatePassword(existingUser, loginRequest.getPassword())) {
+            return new ResponseEntity<>("Invalid password", HttpStatus.UNAUTHORIZED);
+        }
+
+        // Successful login
+        return new ResponseEntity<>(existingUserDTO, HttpStatus.OK);
+    }
+
     @PostMapping("/loginEmployee")
     public ResponseEntity<?> loginCustomer(@RequestBody User user) {
-        User existingUser = userService.findByUserName(user.getUserName());
+        UserDTO existingUser = userService.findByUserName(user.getUserName());
         if (existingUser == null) {
             return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
         }

@@ -3,8 +3,13 @@ package com.thesis.code_market.developer;
 import com.thesis.code_market.cart.Cart;
 import com.thesis.code_market.cart.CartRepository;
 import com.thesis.code_market.user.User;
+import com.thesis.code_market.user.UserDTO;
+import com.thesis.code_market.user.UserRepository;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,7 +22,15 @@ public class DeveloperService {
     private DeveloperRepository developerRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Initialize BCrypt
 
     public ArrayList<Developer> findAll() {
         return (ArrayList<Developer>) developerRepository.findAll();
@@ -28,18 +41,28 @@ public class DeveloperService {
         return developerRepository.findById(id).orElse(null);
     }
 
-    public Developer findByUserName(String userName) {
-        return developerRepository.findByUserName(userName).orElse(null);
+    public UserDTO findByUserName(String userName) {
+        User user = userRepository.findUserByUserName(userName).orElse(null);
+
+        if (user != null) {
+            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
+            Hibernate.initialize(user.getApplicationList()); // Eagerly fetch roles
+            return modelMapper.map(user, UserDTO.class);
+        }
+        return null;
     }
 
     @SuppressWarnings("null")
     public void add(Developer developer) {
-        if (this.findById(developer.getId()) == null) {
-            User savedUser = this.developerRepository.save(developer);
-            Cart cart = new Cart();
-            cart.setUser(savedUser);
-            cartRepository.save(cart);
-        }
+        developer.setPassword(passwordEncoder.encode(developer.getPassword())); // Hash password before saving
+        User savedUser = this.developerRepository.save(developer);
+        Cart cart = new Cart();
+        cart.setUser(savedUser);
+        cartRepository.save(cart);
+    }
+
+    public boolean validatePassword(User user, String rawPassword) {
+        return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 
     @SuppressWarnings("null")
