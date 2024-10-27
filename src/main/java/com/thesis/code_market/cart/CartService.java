@@ -100,6 +100,15 @@ public class CartService {
         return null;
     }
 
+    public CartDetail findCartDetailByIdOrigin(Long cartDetailId) {
+        CartDetail cartDetail = this.cartDetailRepository.findById(cartDetailId).orElse(null);
+        if (cartDetail != null) {
+            CartDetail cartDetail1 = new CartDetail(cartDetail.getId(), cartDetail.getCart(), new Application(cartDetail.getApplication()));
+            return cartDetail1;
+        }
+        return null;
+    }
+
     @SuppressWarnings("null")
     public void deleteCartDetail(Long id) {
         this.cartDetailRepository.deleteById(id);

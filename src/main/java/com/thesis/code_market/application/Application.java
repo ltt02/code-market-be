@@ -85,4 +85,24 @@ public class Application {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "application_framework_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_framework_id", referencedColumnName = "id"))
     private ApplicationFramework applicationFramework;
+
+    public Application(Application application) {
+        this.id = application.getId();
+        this.user = application.getUser();
+        this.name = application.getName();
+        this.description = application.getDescription();
+        this.price = application.getPrice();
+        this.storageCapacity = application.getStorageCapacity();
+        this.cost = application.getCost();
+        this.salePercent = application.getSalePercent();
+        this.type = application.getType();
+        this.material = application.getMaterial();
+        this.images = application.getImages();
+        this.ratings = application.getRatings();
+        this.downloads = application.getDownloads();
+        this.createdAt = application.getCreatedAt();
+        this.updatedAt = application.getUpdatedAt();
+        this.applicationCategoryList = application.getApplicationCategoryList();
+        this.applicationFramework = application.getApplicationFramework();
+    }
 }
