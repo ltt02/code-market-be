@@ -7,8 +7,6 @@ public enum OrderStatus {
     CREATING,
     PENDING_PAYMENT,
     PROCESSING,
-    SHIPPED,
-    DELIVERED,
     CANCELLED,
     REFUNDED,
     ON_HOLD;

@@ -3,6 +3,8 @@ package com.thesis.code_market.payment;
 import com.thesis.code_market.order.Order;
 import com.thesis.code_market.order.OrderService;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -77,6 +79,18 @@ public class PaymentController {
         this.orderService.updateOrder(orderId, order);
 
         return new ResponseEntity<>(paymentUrl, HttpStatus.OK);
+    }
+
+    @GetMapping("/vn-pay-callback")
+    public ResponseEntity<PaymentDTO.VNPayResponse> payCallbackHandler(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String status = request.getParameter("vnp_ResponseCode");
+        if (status.equals("00")) {
+            response.sendRedirect("http://localhost:5173?status=success");
+            return new ResponseEntity<>(new PaymentDTO.VNPayResponse("00", "Success", ""), HttpStatus.OK);
+        } else {
+            response.sendRedirect("http://localhost:5173?status=failure");
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/{orderId}/cod")

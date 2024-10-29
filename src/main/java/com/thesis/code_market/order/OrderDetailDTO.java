@@ -17,7 +17,6 @@ public class OrderDetailDTO {
     // Getters and Setters
     public OrderDetailDTO(CartDetailDTO cartDetail) {
         this();
-//        this.total = cartDetail.getTotal();
         this.application = cartDetail.getApplication();
     }
 }

@@ -1,11 +1,12 @@
 package com.thesis.code_market.order;
 
+import com.thesis.code_market.application.Application;
+import com.thesis.code_market.application.ApplicationService;
 import com.thesis.code_market.cart.CartService;
 import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.customer.CustomerService;
-import com.thesis.code_market.application.Application;
-import com.thesis.code_market.application.ApplicationService;
 import jakarta.transaction.Transactional;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class OrderService {
 
     @Autowired
     private ApplicationService applicationService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     void addOrder(Long customerId, Order order) {
         Customer customer = this.customerService.findById(customerId);
@@ -64,7 +68,8 @@ public class OrderService {
     ArrayList<OrderDetail> addOrderDetailsToOrder(Long orderId, Long[] cartDetailsIdList) {
 
         Arrays.stream(cartDetailsIdList).forEach(id -> {
-            OrderDetail orderDetail = new OrderDetail(this.cartService.findCartDetailByIdOrigin(id));
+            OrderDetailDTO orderDetailDto = new OrderDetailDTO(this.cartService.findCartDetailById(id));
+            OrderDetail orderDetail = modelMapper.map(orderDetailDto, OrderDetail.class);;
             orderDetail.setOrder(this.findOrderById(orderId));
             this.cartService.deleteCartDetail(id);
             this.orderDetailRepository.save(orderDetail);
