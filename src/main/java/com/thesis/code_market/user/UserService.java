@@ -42,7 +42,6 @@ public class UserService {
 
         if (user != null) {
             Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
-            Hibernate.initialize(user.getApplicationList()); // Eagerly fetch roles
             return modelMapper.map(user, UserDTO.class);
         }
         return null;
@@ -53,7 +52,6 @@ public class UserService {
 
         if (user != null) {
             Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
-            Hibernate.initialize(user.getApplicationList()); // Eagerly fetch roles
             return modelMapper.map(user, UserDTO.class);
         }
         return null;

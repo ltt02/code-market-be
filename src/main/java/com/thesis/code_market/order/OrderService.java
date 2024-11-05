@@ -5,6 +5,8 @@ import com.thesis.code_market.application.ApplicationService;
 import com.thesis.code_market.cart.CartService;
 import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.customer.CustomerService;
+import com.thesis.code_market.developer.Developer;
+import com.thesis.code_market.developer.DeveloperService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -28,6 +31,9 @@ public class OrderService {
     private CustomerService customerService;
 
     @Autowired
+    private DeveloperService developerService;
+
+    @Autowired
     private CartService cartService;
 
     @Autowired
@@ -36,11 +42,12 @@ public class OrderService {
     @Autowired
     private ModelMapper modelMapper;
 
-    void addOrder(Long customerId, Order order) {
+    public void addOrder(Long customerId, Long authorId, Order order) {
         Customer customer = this.customerService.findById(customerId);
-        order.setStatus(order.getStatus());
+        Developer developer = this.developerService.findById(authorId);
+        order.setCreateDate(new Date());
         order.setCustomer(customer);
-
+        order.setDeveloper(developer);
         this.orderRepository.save(order);
     }
 
@@ -91,24 +98,24 @@ public class OrderService {
         return this.orderDetailRepository.findById(id).orElse(null);
     }
 
-    public Order updateOrder(Long orderId, Order order) {
+    public void updateOrder(Long orderId, Order order) {
         Order orderDB = this.findOrderById(orderId);
 
         // orderDB.setOrderDetails(order.getOrderDetails());
-        orderDB.setStatus(order.getStatus());
-        orderDB.setCoupon(order.getCoupon());
-//        if (order.getStaff() != null) {
-//            orderDB.setStaff(order.getStaff());
-//        }
+        if (order.getStatus() != null) {
+            orderDB.setStatus(order.getStatus());
+        }
+        if (order.getCoupon() != null) {
+            orderDB.setCoupon(order.getCoupon());
+        }
         if (order.getPayment() != null) {
             orderDB.setPayment(order.getPayment());
         }
-//        if (order.getShipment() != null) {
-//            orderDB.setShipment(order.getShipment());
-//        }
-        orderDB.setTotal(order.getTotal());
+        if (order.getTotal() != null) {
+            orderDB.setTotal(order.getTotal());
+        }
 
         System.out.println("New order detail saved in DB: " + orderDB);
-        return this.orderRepository.save(orderDB);
+        this.orderRepository.save(orderDB);
     }
 }

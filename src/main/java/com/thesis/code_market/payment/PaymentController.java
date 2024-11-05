@@ -67,18 +67,19 @@ public class PaymentController {
     //             HttpStatus.BAD_REQUEST);
     // }
 
-    @PostMapping("/{orderId}/vnpay")
-    public ResponseEntity<?> addPaymentByVNPay(@PathVariable("orderId") Long orderId, @RequestBody Payment payment) throws ServletException, IOException {
-        Payment newPayment = this.paymentService.addPayment(payment);
-        String paymentUrl = this.paymentService.getVNPayTransaction(orderId, payment);
-        newPayment.setPaymentUrl(paymentUrl);
+    @PostMapping("/vnpay/{customerId}")
+    public ResponseEntity<?> addPaymentByVNPay(@PathVariable Long customerId, @RequestBody PaymentOrderRequest request) throws ServletException, IOException {
+//        Payment newPayment = this.paymentService.addPayment(payment);
+//        String paymentUrl = this.paymentService.getVNPayTransaction(payment);
+//        newPayment.setPaymentUrl(paymentUrl);
+//
+//        this.paymentService.updatePayment(newPayment.getId(), newPayment);
+//        Order order = this.orderService.findOrderById(orderId);
+//        order.setPayment(newPayment);
+//        this.orderService.updateOrder(orderId, order);
 
-        this.paymentService.updatePayment(newPayment.getId(), newPayment);
-        Order order = this.orderService.findOrderById(orderId);
-        order.setPayment(newPayment);
-        this.orderService.updateOrder(orderId, order);
-
-        return new ResponseEntity<>(paymentUrl, HttpStatus.OK);
+        PaymentOrderResponse response = this.paymentService.handlePayment(customerId, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/vn-pay-callback")

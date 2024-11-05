@@ -1,5 +1,6 @@
 package com.thesis.code_market.application_framework;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.application.Application;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,8 @@ public class ApplicationFramework {
 
     @Column(length = 100)
     private String name;
-    
+
+    @JsonIgnore
     @OneToMany(mappedBy = "applicationFramework")
     private Collection<Application> applications;
 

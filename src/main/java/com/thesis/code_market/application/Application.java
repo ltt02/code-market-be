@@ -1,11 +1,11 @@
 package com.thesis.code_market.application;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.application_category.ApplicationCategory;
 import com.thesis.code_market.application_framework.ApplicationFramework;
-import com.thesis.code_market.user.User;
+import com.thesis.code_market.developer.Developer;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,7 +20,6 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "application")
-@AllArgsConstructor
 @NoArgsConstructor
 public class Application {
 
@@ -29,9 +28,10 @@ public class Application {
     @Column
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "developer_id")
+    private Developer developer;
 
     @Column
     private String name;
@@ -88,7 +88,6 @@ public class Application {
 
     public Application(Application application) {
         this.id = application.getId();
-        this.user = application.getUser();
         this.name = application.getName();
         this.description = application.getDescription();
         this.price = application.getPrice();

@@ -29,6 +29,15 @@ public class ApplicationController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
     }
 
+    @GetMapping("/developer/{developerId}")
+    public ResponseEntity<?> getAllApplicationByDeveloperId(@PathVariable("developerId") Long developerId) {
+        List<ApplicationDTO> response = this.applicationService.getAllApplicationByDeveloperId(developerId);
+        if (Objects.isNull(response)) {
+            return new ResponseEntity<>("The list is null", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getApplicationById(@PathVariable Long id) {
         Application application = this.applicationService.findApplicationById(id);

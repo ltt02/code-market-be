@@ -33,6 +33,11 @@ public class ApplicationService {
         return applicationList.stream().map(ApplicationDTO::new).toList();
     }
 
+    public List<ApplicationDTO> getAllApplicationByDeveloperId(Long id) {
+        List<Application> applicationList = this.applicationRepository.findAllByDeveloper_Id(id);
+        return applicationList.stream().map(ApplicationDTO::new).toList();
+    }
+
     List<ApplicationDTO> getTopNewApplications() {
         Pageable topTen = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<Application> applicationListNew = this.applicationRepository.findAllByOrderByCreatedAtDesc(topTen);
@@ -85,7 +90,6 @@ public class ApplicationService {
     void deleteApplicationById(Long id) {
         this.applicationRepository.deleteById(id);
     }
-
 
     public ArrayList<Application> findApplicationByTypes(ArrayList<ApplicationType> types) {
         ArrayList<Application> filteredApplications = new ArrayList<Application>();

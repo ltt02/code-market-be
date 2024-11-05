@@ -1,6 +1,10 @@
 package com.thesis.code_market.payment;
 
+import com.thesis.code_market.order.Order;
+import com.thesis.code_market.order.OrderService;
+import com.thesis.code_market.order.OrderToPaymentDTO;
 import com.thesis.code_market.payment.vnpay.VNPayConfig;
+import com.thesis.code_market.util.VNPayUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,9 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private OrderService orderService;
+
     public ArrayList<Payment> findAllPayments() {
         return (ArrayList<Payment>) this.paymentRepository.findAll();
     }
@@ -31,7 +38,7 @@ public class PaymentService {
         return this.paymentRepository.save(payment);
     }
 
-    String getVNPayTransaction(Long orderId, Payment payment) {
+    String getVNPayTransaction(Payment payment) {
 
         String orderType = "other";
         String vnp_Version = "2.1.0";
@@ -39,7 +46,7 @@ public class PaymentService {
         String amount = payment.getAmount().toString().concat("00");
         String bankCode = "";
 
-        String vnp_TxnRef = String.valueOf(orderId);
+        String vnp_TxnRef = VNPayUtil.getRandomNumber(8);
         String vnp_IpAddr = "127.0.0.1";
 
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
@@ -59,7 +66,7 @@ public class PaymentService {
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
 
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl + String.valueOf(orderId));
+        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl + vnp_TxnRef);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -142,5 +149,25 @@ public class PaymentService {
         } else {
             return false;
         }
+    }
+
+    @Transactional
+    public PaymentOrderResponse handlePayment(Long customerId, PaymentOrderRequest request) {
+        PaymentOrderResponse response = new PaymentOrderResponse();
+        List<Long> orderIdList = new ArrayList<>();
+        Payment newPayment = this.addPayment(request.getPayment());
+        String paymentUrl = this.getVNPayTransaction(request.getPayment());
+        newPayment.setPaymentUrl(paymentUrl);
+
+        this.updatePayment(newPayment.getId(), newPayment);
+
+        for (OrderToPaymentDTO order : request.getOrderList()) {
+            Order newOrder = new Order(order);
+            this.orderService.addOrder(customerId, order.getAuthorId(), newOrder);
+            orderIdList.add(newOrder.getId());
+        }
+        response.setPaymentUrl(paymentUrl);
+        response.setOrderIdList(orderIdList);
+        return response;
     }
 }

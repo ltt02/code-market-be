@@ -1,5 +1,6 @@
 package com.thesis.code_market.application_category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.application.Application;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ApplicationCategory {
     @Column(length = 100)
     private String name;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "applicationCategoryList")
     private Collection<Application> applications;
 

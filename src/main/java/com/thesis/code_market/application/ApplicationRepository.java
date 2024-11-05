@@ -17,4 +17,6 @@ interface ApplicationRepository extends JpaRepository<Application, Long> {
     ArrayList<Application> findAllByOrderByPriceAsc(Pageable pageable);
 
     ArrayList<Application> findAllByApplicationFramework_Name(String name);
+
+    ArrayList<Application> findAllByDeveloper_Id(Long id);
 }

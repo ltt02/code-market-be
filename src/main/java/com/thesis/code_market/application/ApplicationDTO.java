@@ -39,6 +39,6 @@ public class ApplicationDTO {
         this.downloads = application.getDownloads();
         this.applicationCategoryList = application.getApplicationCategoryList().stream().map(ApplicationCategoryDTO::new).collect(Collectors.toList());
         this.applicationFramework = new ApplicationFrameworkDTO(application.getApplicationFramework());
-        this.authorId = application.getUser().getId();
+        this.authorId = application.getDeveloper().getId();
     }
 }

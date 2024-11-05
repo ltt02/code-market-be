@@ -1,7 +1,7 @@
 package com.thesis.code_market.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.thesis.code_market.application.Application;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -61,15 +61,13 @@ public class User {
         @Temporal(value = TemporalType.TIMESTAMP)
         private Date updatedAt;
 
+        @JsonIgnore
         @ManyToMany(fetch = FetchType.EAGER)
         @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
         private List<Role> roles;
 
         @Column(columnDefinition = "boolean default false")
         private boolean locked;
-
-        @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
-        private List<Application> applicationList;
 
         @Transient
         public String getUserType() {

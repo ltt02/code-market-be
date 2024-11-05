@@ -76,13 +76,13 @@ public class DeveloperController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Developer developer) {
         // Find user by username
-        UserDTO existingUserDTO = developerService.findByUserName(developer.getUserName());
-        if (existingUserDTO == null) {
+        DeveloperDTO existingDeveloperDTO = developerService.findByUserName(developer.getUserName());
+        if (existingDeveloperDTO == null) {
             return new ResponseEntity<>("Developer not found", HttpStatus.NOT_FOUND);
         }
 
         // Convert UserDTO to actual User object for password checking
-        User existingUser = developerService.findById(existingUserDTO.getId());
+        User existingUser = developerService.findById(existingDeveloperDTO.getId());
         if (existingUser == null) {
             return new ResponseEntity<>("Developer not found", HttpStatus.NOT_FOUND);
         }
@@ -93,7 +93,7 @@ public class DeveloperController {
         }
 
         // Successful login
-        return new ResponseEntity<>(existingUserDTO, HttpStatus.OK);
+        return new ResponseEntity<>(existingDeveloperDTO, HttpStatus.OK);
     }
 
 }

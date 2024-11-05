@@ -3,7 +3,6 @@ package com.thesis.code_market.developer;
 import com.thesis.code_market.cart.Cart;
 import com.thesis.code_market.cart.CartRepository;
 import com.thesis.code_market.user.User;
-import com.thesis.code_market.user.UserDTO;
 import com.thesis.code_market.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
@@ -41,13 +40,13 @@ public class DeveloperService {
         return developerRepository.findById(id).orElse(null);
     }
 
-    public UserDTO findByUserName(String userName) {
-        User user = userRepository.findUserByUserName(userName).orElse(null);
+    public DeveloperDTO findByUserName(String userName) {
+        Developer developer = developerRepository.findByUserName(userName).orElse(null);
 
-        if (user != null) {
-            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
-            Hibernate.initialize(user.getApplicationList()); // Eagerly fetch roles
-            return modelMapper.map(user, UserDTO.class);
+        if (developer != null) {
+            Hibernate.initialize(developer.getRoles()); // Eagerly fetch roles
+//            Hibernate.initialize(developer.getApplicationList()); // Eagerly fetch roles
+            return modelMapper.map(developer, DeveloperDTO.class);
         }
         return null;
     }

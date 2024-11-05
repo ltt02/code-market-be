@@ -1,6 +1,6 @@
 package com.thesis.code_market.coupon;
 
-import com.thesis.code_market.user.User;
+import com.thesis.code_market.developer.Developer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +22,9 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "developer_id", referencedColumnName = "id")
+    private Developer developer;
 
     @Column(length = 20)
     private String code;

@@ -29,9 +29,9 @@ public class OrderController {
         return new ResponseEntity<>(this.orderService.findAllOrderDetailsByOrder(id), HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Order> addOrder(@PathVariable Long customerId, @RequestBody Order order) {
-        this.orderService.addOrder(customerId, order);
+    @PostMapping("/author/{authorId}")
+    public ResponseEntity<Order> addOrder(@PathVariable Long customerId, @PathVariable Long authorId, @RequestBody Order order) {
+        this.orderService.addOrder(customerId, authorId, order);
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
@@ -58,9 +58,9 @@ public class OrderController {
         System.out.println("New order detail: " + order);
         if (this.orderService.findOrderById(orderId) == null) {
             return new ResponseEntity<>("Not found Order", HttpStatus.NOT_FOUND);
-
         }
-        return new ResponseEntity<>(this.orderService.updateOrder(orderId, order), HttpStatus.OK);
+        this.orderService.updateOrder(orderId, order);
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
 }

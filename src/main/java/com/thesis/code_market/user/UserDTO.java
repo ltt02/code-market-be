@@ -23,6 +23,7 @@ public class UserDTO {
     private String userType;
     private String address;
     private Date dob;
+    private String avatar;
     private Boolean locked;
     private List<RoleDTO> roles;
     private List<ApplicationDTO> applicationList;
@@ -36,8 +37,8 @@ public class UserDTO {
         this.email = user.getEmail();
         this.userType = user.getUserType();
         this.dob = user.getDob();
+        this.avatar = user.getAvatar();
         this.locked = user.isLocked();
         this.roles = user.getRoles().stream().map(RoleDTO::new).collect(Collectors.toList());
-        this.applicationList = user.getApplicationList().stream().map(ApplicationDTO::new).collect(Collectors.toList());
     }
 }
