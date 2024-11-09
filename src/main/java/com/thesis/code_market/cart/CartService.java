@@ -71,7 +71,7 @@ public class CartService {
     }
 
     public ArrayList<CartDetailDTO> getAllCartDetails(Long customerId) {
-        Cart cart = this.findCartByCustomerId(customerId);
+            Cart cart = this.findCartByCustomerId(customerId);
         return cart.getCartDetails().stream()
                 .map(cartDetail -> new CartDetailDTO(cartDetail.getId(), new ApplicationDTO(cartDetail.getApplication())))
                 .collect(Collectors.toCollection(ArrayList::new));

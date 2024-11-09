@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.application_category.ApplicationCategory;
 import com.thesis.code_market.application_framework.ApplicationFramework;
+import com.thesis.code_market.application_platform.ApplicationPlatform;
+import com.thesis.code_market.application_type.ApplicationType;
 import com.thesis.code_market.developer.Developer;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -45,17 +47,8 @@ public class Application {
     @Column(precision = 10, scale = 2)
     private BigDecimal storageCapacity;
 
-    @Column(precision = 10, scale = 2)
-    private BigDecimal cost;
-
-    @Column(columnDefinition = "integer default 0")
-    private Integer salePercent;
-
-    @Enumerated(EnumType.STRING)
-    private ApplicationType type;
-
-    @Enumerated(EnumType.STRING)
-    private ApplicationMaterial material;
+//    @Enumerated(EnumType.STRING)
+//    private ApplicationType type;
 
     @Column(columnDefinition = "TEXT")
     private String images;
@@ -82,9 +75,19 @@ public class Application {
     @JoinTable(name = "application_category_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_category_id", referencedColumnName = "id"))
     private List<ApplicationCategory> applicationCategoryList;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "application_framework_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_framework_id", referencedColumnName = "id"))
-    private ApplicationFramework applicationFramework;
+    private List<ApplicationFramework> applicationFrameworkList;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "application_platform_detail",
+            joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "platform_id", referencedColumnName = "id"))
+    private List<ApplicationPlatform> applicationPlatformList;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "type_id")
+    private ApplicationType applicationType;
 
     public Application(Application application) {
         this.id = application.getId();
@@ -92,16 +95,14 @@ public class Application {
         this.description = application.getDescription();
         this.price = application.getPrice();
         this.storageCapacity = application.getStorageCapacity();
-        this.cost = application.getCost();
-        this.salePercent = application.getSalePercent();
-        this.type = application.getType();
-        this.material = application.getMaterial();
         this.images = application.getImages();
         this.ratings = application.getRatings();
         this.downloads = application.getDownloads();
         this.createdAt = application.getCreatedAt();
         this.updatedAt = application.getUpdatedAt();
         this.applicationCategoryList = application.getApplicationCategoryList();
-        this.applicationFramework = application.getApplicationFramework();
+        this.applicationFrameworkList = application.getApplicationFrameworkList();
+        this.applicationType = application.getApplicationType();
+        this.applicationPlatformList = application.getApplicationPlatformList();
     }
 }

@@ -1,4 +1,4 @@
-package com.thesis.code_market.application_framework;
+package com.thesis.code_market.application_platform;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.application.Application;
@@ -8,17 +8,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.stereotype.Component;
-
 import java.util.Collection;
-
 @Component
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "application_framework")
+@Table(name = "application_platform")
 @EntityListeners(AuditingEntityListener.class)
-public class ApplicationFramework {
+public class ApplicationPlatform {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,15 +26,15 @@ public class ApplicationFramework {
     private String name;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "applicationFrameworkList")
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "applicationPlatformList")
     private Collection<Application> applications;
 
-    public ApplicationFramework(String name) {
+    public ApplicationPlatform(String name) {
         this.name = name;
     }
 
-    public ApplicationFramework(ApplicationFramework framework) {
-        this.id = framework.getId();
-        this.name = framework.getName();
+    public ApplicationPlatform(ApplicationPlatform platform) {
+        this.id = platform.getId();
+        this.name = platform.getName();
     }
 }

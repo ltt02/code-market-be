@@ -66,10 +66,7 @@ public class ApplicationService {
         if (existingApplication != null) {
             existingApplication.setName(applicationUpdateInfo.getName() != null ? applicationUpdateInfo.getName() : existingApplication.getName());
             existingApplication.setPrice(applicationUpdateInfo.getPrice() != null ? applicationUpdateInfo.getPrice() : existingApplication.getPrice());
-            existingApplication.setCost(applicationUpdateInfo.getCost() != null ? applicationUpdateInfo.getCost() : existingApplication.getCost());
-            existingApplication.setSalePercent(applicationUpdateInfo.getSalePercent() >= 0 ? applicationUpdateInfo.getSalePercent() : existingApplication.getSalePercent());
-            existingApplication.setType(applicationUpdateInfo.getType() != null ? applicationUpdateInfo.getType() : existingApplication.getType());
-            existingApplication.setMaterial(applicationUpdateInfo.getMaterial() != null ? applicationUpdateInfo.getMaterial() : existingApplication.getMaterial());
+            existingApplication.setApplicationType(applicationUpdateInfo.getApplicationType() != null ? applicationUpdateInfo.getApplicationType() : existingApplication.getApplicationType());
             existingApplication.setImages(applicationUpdateInfo.getImages() != null ? applicationUpdateInfo.getImages() : existingApplication.getImages());
 
             this.applicationRepository.save(existingApplication);
@@ -91,11 +88,11 @@ public class ApplicationService {
         this.applicationRepository.deleteById(id);
     }
 
-    public ArrayList<Application> findApplicationByTypes(ArrayList<ApplicationType> types) {
-        ArrayList<Application> filteredApplications = new ArrayList<Application>();
-        for (ApplicationType type : types) {
-            filteredApplications.addAll(this.applicationRepository.findApplicationsByType(type));
-        }
-        return filteredApplications;
-    }
+//    public ArrayList<Application> findApplicationByTypes(ArrayList<ApplicationType> types) {
+//        ArrayList<Application> filteredApplications = new ArrayList<Application>();
+//        for (ApplicationType type : types) {
+//            filteredApplications.addAll(this.applicationRepository.findApplicationsByType(type));
+//        }
+//        return filteredApplications;
+//    }
 }
