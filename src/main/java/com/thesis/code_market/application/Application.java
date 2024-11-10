@@ -71,6 +71,9 @@ public class Application {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedAt;
 
+    @Column
+    private Integer status;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "application_category_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_category_id", referencedColumnName = "id"))
     private List<ApplicationCategory> applicationCategoryList;

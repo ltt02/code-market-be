@@ -1,7 +1,6 @@
 package com.thesis.code_market.application;
 
 import com.thesis.code_market.application_category.ApplicationCategoryDTO;
-import com.thesis.code_market.application_framework.ApplicationFramework;
 import com.thesis.code_market.application_framework.ApplicationFrameworkDTO;
 import com.thesis.code_market.application_platform.ApplicationPlatformDTO;
 import com.thesis.code_market.application_type.ApplicationTypeDTO;
@@ -30,6 +29,7 @@ public class ApplicationDTO {
     private List<ApplicationFrameworkDTO> applicationFrameworkList;
     private List<ApplicationPlatformDTO> applicationPlatformList;
     private Long authorId;
+    private Integer status;
 
     public ApplicationDTO(Application application) {
         this.id = application.getId();
@@ -44,7 +44,7 @@ public class ApplicationDTO {
         this.applicationCategoryList = application.getApplicationCategoryList().stream().map(ApplicationCategoryDTO::new).collect(Collectors.toList());
         this.applicationFrameworkList = application.getApplicationFrameworkList().stream().map(ApplicationFrameworkDTO::new).collect(Collectors.toList());
         this.applicationPlatformList = application.getApplicationPlatformList().stream().map(ApplicationPlatformDTO::new).collect(Collectors.toList());
-
+        this.status = application.getStatus();
         this.authorId = application.getDeveloper().getId();
     }
 }
