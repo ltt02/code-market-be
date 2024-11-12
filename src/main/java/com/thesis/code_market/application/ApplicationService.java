@@ -25,6 +25,7 @@ public class ApplicationService {
 
 
     void addApplication(Application application) {
+
         this.applicationRepository.save(application);
     }
 
