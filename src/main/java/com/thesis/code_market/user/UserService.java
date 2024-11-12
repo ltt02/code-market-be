@@ -2,6 +2,7 @@ package com.thesis.code_market.user;
 
 import com.thesis.code_market.cart.Cart;
 import com.thesis.code_market.cart.CartRepository;
+import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
@@ -23,6 +24,9 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private MinioChannel minioChannel;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Initialize BCrypt
 
@@ -95,5 +99,13 @@ public class UserService {
             return existUser;
         }
         return null;
+    }
+
+    public UserDTO updateInfo(UserInfoRequest request) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUserName(request.getUsername());
+        userDTO.setPassword(request.getPassword());
+        userDTO.setAvatar(minioChannel.upload(request.getAvatar()));
+        return userDTO;
     }
 }

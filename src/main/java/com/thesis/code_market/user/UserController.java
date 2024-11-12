@@ -133,4 +133,8 @@ public class UserController {
         }
     }
 
+    @PutMapping
+    public ResponseEntity<?> updateInfo(UserInfoRequest request) {
+        return new ResponseEntity<>(this.userService.updateInfo(request), HttpStatus.OK);
+    }
 }
