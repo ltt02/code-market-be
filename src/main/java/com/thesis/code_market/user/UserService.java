@@ -105,7 +105,7 @@ public class UserService {
         UserDTO userDTO = new UserDTO();
         userDTO.setUserName(request.getUsername());
         userDTO.setPassword(request.getPassword());
-        userDTO.setAvatar(minioChannel.upload(request.getAvatar()));
+//        userDTO.setAvatar(minioChannel.upload(request.getAvatar()));
         return userDTO;
     }
 }

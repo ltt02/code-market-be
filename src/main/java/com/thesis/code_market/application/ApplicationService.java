@@ -1,6 +1,7 @@
 package com.thesis.code_market.application;
 
 import com.thesis.code_market.developer.DeveloperService;
+import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +26,9 @@ public class ApplicationService {
 
     @Autowired
     private DeveloperService developerService;
+
+    @Autowired
+    private MinioChannel minioChannel;
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
 
@@ -42,7 +47,14 @@ public class ApplicationService {
         Application application = Application.fromDTO(applicationDto);
         application.setDeveloper(developerService.findById(request.getAuthorId()));
         this.applicationRepository.save(application);
-
+        application.setSourceCode(minioChannel.upload(request.getSourceCode(), "/application/ " + application.getId()));
+        for (MultipartFile img : request.getImages()) {
+            if (application.getImages() == null) {
+                application.setImages(minioChannel.upload(img, "/application/ " + application.getId() + "/images"));
+            } else {
+                application.setImages(application.getImages() + ", " + minioChannel.upload(img, "/application/ " + application.getId() + "/images"));
+            }
+        }
         return new ApplicationDTO(application);
     }
 

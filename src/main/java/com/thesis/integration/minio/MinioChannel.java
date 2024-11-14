@@ -66,14 +66,15 @@ public class MinioChannel {
     }
 
     @SneakyThrows
-    public String upload(@NonNull final MultipartFile file) {
-        log.info("Bucket: {}, file size: {}", BUCKET, "/user/avatar/", file.getSize());
+    public String upload(@NonNull final MultipartFile file, String path) {
+        log.info("Bucket: {}, file size: {}", BUCKET, path, file.getSize());
         final var fileName = file.getOriginalFilename();
+        final var objectName = path + "/" + fileName; // Include the folder path here
         try {
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(BUCKET)
-                            .object(fileName)
+                            .object(objectName)
                             .contentType(Objects.isNull(file.getContentType()) ? "image/png; image/jpg; .zip" : file.getContentType())
                             .stream(file.getInputStream(), file.getSize(), -1)
                             .build()
