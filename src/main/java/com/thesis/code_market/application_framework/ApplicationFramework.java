@@ -39,4 +39,9 @@ public class ApplicationFramework {
         this.id = framework.getId();
         this.name = framework.getName();
     }
+
+    public ApplicationFramework(ApplicationFrameworkDTO frameworkDto) {
+        this.id = frameworkDto.getId();
+        this.name = frameworkDto.getName();
+    }
 }

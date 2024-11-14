@@ -1,12 +1,13 @@
 package com.thesis.code_market.application;
 
+import com.thesis.code_market.developer.DeveloperService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,12 +22,28 @@ public class ApplicationService {
     @Autowired
     private ApplicationRepository applicationRepository;
 
+    @Autowired
+    private DeveloperService developerService;
+
     private static final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
 
 
-    void addApplication(Application application) {
-
+    ApplicationDTO addApplication(ApplicationInfoRequest request) {
+        ApplicationDTO applicationDto = new ApplicationDTO();
+        applicationDto.setName(request.getName());
+        applicationDto.setDescription(request.getDescription());
+        applicationDto.setPrice(request.getPrice());
+        applicationDto.setApplicationFrameworkList(request.getApplicationFrameworkList());
+        applicationDto.setApplicationCategoryList(request.getApplicationCategoryList());
+        applicationDto.setApplicationPlatformList(request.getApplicationPlatformList());
+        applicationDto.setApplicationType(request.getApplicationType());
+        applicationDto.setAuthorId(request.getAuthorId());
+        applicationDto.setStatus(1);
+        Application application = Application.fromDTO(applicationDto);
+        application.setDeveloper(developerService.findById(request.getAuthorId()));
         this.applicationRepository.save(application);
+
+        return new ApplicationDTO(application);
     }
 
     List<ApplicationDTO> getAllApplications() {

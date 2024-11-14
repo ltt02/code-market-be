@@ -1,10 +1,18 @@
 package com.thesis.code_market.application;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thesis.code_market.application_category.ApplicationCategoryDTO;
+import com.thesis.code_market.application_framework.ApplicationFrameworkDTO;
+import com.thesis.code_market.application_platform.ApplicationPlatformDTO;
+import com.thesis.code_market.application_type.ApplicationTypeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,9 +57,35 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<Application> addApplication(@RequestBody Application application) {
-        this.applicationService.addApplication(application);
-        return new ResponseEntity<>(application, HttpStatus.CREATED);
+    public ResponseEntity<ApplicationDTO> addApplication(@RequestParam("name") String name,
+                                                         @RequestParam("price") BigDecimal price,
+                                                         @RequestParam("storageCapacity") BigDecimal storageCapacity,
+                                                         @RequestParam("authorId") Long authorId,
+                                                         @RequestParam("description") String description,
+                                                         @RequestParam("applicationType") String applicationTypeJson,
+                                                         @RequestParam("applicationCategoryList") String applicationCategoryListJson,
+                                                         @RequestParam("applicationFrameworkList") String applicationFrameworkListJson,
+                                                         @RequestParam("applicationPlatformList") String applicationPlatformListJson,
+                                                         @RequestParam("sourceCode") MultipartFile sourceCode,
+                                                         @RequestParam("images") List<MultipartFile> images) throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        // Deserialize the JSON strings to DTOs
+        ApplicationTypeDTO applicationType = objectMapper.readValue(applicationTypeJson, ApplicationTypeDTO.class);
+        List<ApplicationCategoryDTO> applicationCategoryList = objectMapper.readValue(applicationCategoryListJson, new TypeReference<List<ApplicationCategoryDTO>>() {
+        });
+        List<ApplicationFrameworkDTO> applicationFrameworkList = objectMapper.readValue(applicationFrameworkListJson, new TypeReference<List<ApplicationFrameworkDTO>>() {
+        });
+        List<ApplicationPlatformDTO> applicationPlatformList = objectMapper.readValue(applicationPlatformListJson, new TypeReference<List<ApplicationPlatformDTO>>() {
+        });
+
+        ApplicationInfoRequest request = new ApplicationInfoRequest(
+                name, price, storageCapacity, applicationCategoryList, applicationFrameworkList, applicationPlatformList, applicationType, description,
+                sourceCode, images, authorId
+        );
+        ApplicationDTO response = this.applicationService.addApplication(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 //    @PutMapping("/{id}")

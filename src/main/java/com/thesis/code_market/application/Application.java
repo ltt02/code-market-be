@@ -74,6 +74,9 @@ public class Application {
     @Column
     private Integer status;
 
+    @Column(columnDefinition = "TEXT")
+    private String sourceCode;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "application_category_detail", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "application_category_id", referencedColumnName = "id"))
     private List<ApplicationCategory> applicationCategoryList;
@@ -107,5 +110,35 @@ public class Application {
         this.applicationFrameworkList = application.getApplicationFrameworkList();
         this.applicationType = application.getApplicationType();
         this.applicationPlatformList = application.getApplicationPlatformList();
+    }
+
+    public static Application fromDTO(ApplicationDTO dto) {
+        Application application = new Application();
+        application.setName(dto.getName());
+        application.setDescription(dto.getDescription());
+        application.setPrice(dto.getPrice());
+        application.setStorageCapacity(dto.getStorageCapacity());
+        application.setImages(dto.getImages());
+
+        List<ApplicationFramework> frameworkList = dto.getApplicationFrameworkList().stream()
+                .map(ApplicationFramework::new) // Use the constructor
+                .toList();
+
+        List<ApplicationCategory> categoryList = dto.getApplicationCategoryList().stream()
+                .map(ApplicationCategory::new) // Use the constructor
+                .toList();
+
+        List<ApplicationPlatform> platformList = dto.getApplicationPlatformList().stream()
+                .map(ApplicationPlatform::new) // Use the constructor
+                .toList();
+
+        application.setApplicationFrameworkList(frameworkList);
+        application.setApplicationCategoryList(categoryList);
+        application.setApplicationPlatformList(platformList);
+        application.setApplicationType(new ApplicationType((dto.getApplicationType())));
+        application.setStatus(dto.getStatus());
+        application.setSourceCode(dto.getSourceCode());
+        application.setImages(dto.getImages());
+        return application;
     }
 }

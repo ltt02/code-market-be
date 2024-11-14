@@ -30,6 +30,7 @@ public class ApplicationDTO {
     private List<ApplicationPlatformDTO> applicationPlatformList;
     private Long authorId;
     private Integer status;
+    private String sourceCode;
 
     public ApplicationDTO(Application application) {
         this.id = application.getId();
@@ -45,6 +46,6 @@ public class ApplicationDTO {
         this.applicationFrameworkList = application.getApplicationFrameworkList().stream().map(ApplicationFrameworkDTO::new).collect(Collectors.toList());
         this.applicationPlatformList = application.getApplicationPlatformList().stream().map(ApplicationPlatformDTO::new).collect(Collectors.toList());
         this.status = application.getStatus();
-        this.authorId = application.getDeveloper().getId();
+        this.sourceCode = application.getSourceCode();
     }
 }

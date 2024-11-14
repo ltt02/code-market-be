@@ -39,4 +39,9 @@ public class ApplicationCategory {
         this.id = category.getId();
         this.name = category.getName();
     }
+
+    public ApplicationCategory(ApplicationCategoryDTO categoryDTO) {
+        this.id = categoryDTO.getId();
+        this.name = categoryDTO.getName();
+    }
 }

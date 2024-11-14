@@ -39,4 +39,9 @@ public class ApplicationType {
         this.id = type.getId();
         this.name = type.getName();
     }
+
+    public ApplicationType(ApplicationTypeDTO typeDTO) {
+        this.id = typeDTO.getId();
+        this.name = typeDTO.getName();
+    }
 }

@@ -37,4 +37,9 @@ public class ApplicationPlatform {
         this.id = platform.getId();
         this.name = platform.getName();
     }
+
+    public ApplicationPlatform(ApplicationPlatformDTO platformDTO) {
+        this.id = platformDTO.getId();
+        this.name = platformDTO.getName();
+    }
 }
