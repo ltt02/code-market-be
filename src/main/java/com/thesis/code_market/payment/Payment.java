@@ -1,5 +1,6 @@
 package com.thesis.code_market.payment;
 
+import com.thesis.code_market.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Entity
@@ -39,5 +41,8 @@ public class Payment {
 
     @Column(columnDefinition = "TEXT")
     private String paymentUrl;
+
+    @OneToMany(mappedBy = "payment")
+    private List<Order> orderList;
 
 }

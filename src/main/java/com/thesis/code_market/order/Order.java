@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Entity
@@ -49,6 +50,9 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetailList;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thesis.code_market.application_category.ApplicationCategoryDTO;
 import com.thesis.code_market.application_framework.ApplicationFrameworkDTO;
+import com.thesis.code_market.application_images.ApplicationImageService;
 import com.thesis.code_market.application_platform.ApplicationPlatformDTO;
 import com.thesis.code_market.application_type.ApplicationTypeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ApplicationController {
 
     @Autowired
     ApplicationService applicationService;
+
+    @Autowired
+    ApplicationImageService applicationImageService;
 
     @GetMapping
     public ResponseEntity<?> getAllApplications() {
@@ -52,7 +56,7 @@ public class ApplicationController {
         if (application == null) {
             return new ResponseEntity<>("This application is not exist", HttpStatus.NOT_FOUND);
         }
-        ApplicationDTO applicationDTO = new ApplicationDTO(application);
+        ApplicationDTO applicationDTO = new ApplicationDTO(application, applicationImageService);
         return new ResponseEntity<>(applicationDTO, HttpStatus.OK);
     }
 

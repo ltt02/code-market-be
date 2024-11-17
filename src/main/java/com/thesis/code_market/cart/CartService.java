@@ -1,8 +1,8 @@
 package com.thesis.code_market.cart;
 
 import com.thesis.code_market.application.Application;
-import com.thesis.code_market.application.ApplicationDTO;
 import com.thesis.code_market.application.ApplicationService;
+import com.thesis.code_market.application_images.ApplicationImageService;
 import com.thesis.code_market.user.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,8 @@ public class CartService {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ApplicationImageService applicationImageService;
 
     public CartDTO addApplicationToCart(CartDetailRequest cartDetailRequest) {
         // Tìm hoặc tạo Cart cho customer
@@ -60,7 +62,6 @@ public class CartService {
     }
 
 
-
     private Cart findOrCreateCartByCustomerId(Long userId) {
         Cart cart = this.cartRepository.findByUserId(userId).orElse(new Cart());
         if (cart.getUser() == null) {
@@ -71,9 +72,9 @@ public class CartService {
     }
 
     public ArrayList<CartDetailDTO> getAllCartDetails(Long customerId) {
-            Cart cart = this.findCartByCustomerId(customerId);
+        Cart cart = this.findCartByCustomerId(customerId);
         return cart.getCartDetails().stream()
-                .map(cartDetail -> new CartDetailDTO(cartDetail.getId(), new ApplicationDTO(cartDetail.getApplication())))
+                .map(cartDetail -> new CartDetailDTO(cartDetail.getId(), cartDetail.getApplication()))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -84,7 +85,7 @@ public class CartService {
             cart.setUser(this.userService.findById(userId));
             this.cartRepository.saveAndFlush(cart);
         }
-        
+
         return cart;
     }
 
@@ -94,7 +95,7 @@ public class CartService {
         if (cartDetail != null) {
             return new CartDetailDTO(
                     cartDetail.getId(),
-                    new ApplicationDTO(cartDetail.getApplication())
+                    cartDetail.getApplication()
             );
         }
         return null;

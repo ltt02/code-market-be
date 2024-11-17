@@ -1,7 +1,6 @@
 package com.thesis.code_market.cart;
 
 import com.thesis.code_market.application.Application;
-import com.thesis.code_market.application.ApplicationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class CartDTO {
                     Long cartDetailId = detail.getId();
                     Application application = (detail.getApplication() != null) ? detail.getApplication() : null;
                     assert application != null;
-                    return new CartDetailDTO(cartDetailId, new ApplicationDTO(application));
+                    return new CartDetailDTO(cartDetailId, application);
                 })
                 .collect(Collectors.toList());
     }

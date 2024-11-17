@@ -41,4 +41,7 @@ public class OrderDetail {
         this.application = cartDetail.getApplication();
     }
 
+    public OrderDetail(OrderDetailDTO orderDetailDto) {
+        this.order = orderDetailDto.getOrderId();
+    }
 }

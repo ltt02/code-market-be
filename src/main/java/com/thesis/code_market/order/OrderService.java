@@ -76,7 +76,7 @@ public class OrderService {
 
         Arrays.stream(cartDetailsIdList).forEach(id -> {
             OrderDetailDTO orderDetailDto = new OrderDetailDTO(this.cartService.findCartDetailById(id));
-            OrderDetail orderDetail = modelMapper.map(orderDetailDto, OrderDetail.class);;
+            OrderDetail orderDetail = new OrderDetail(orderDetailDto);
             orderDetail.setOrder(this.findOrderById(orderId));
             this.cartService.deleteCartDetail(id);
             this.orderDetailRepository.save(orderDetail);

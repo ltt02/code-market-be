@@ -70,7 +70,9 @@ public class MinioChannel {
         log.info("Bucket: {}, file size: {}", BUCKET, path, file.getSize());
         final var fileName = file.getOriginalFilename();
         final var objectName = path + "/" + fileName; // Include the folder path here
+
         try {
+            // Upload the object
             minioClient.putObject(
                     PutObjectArgs.builder()
                             .bucket(BUCKET)
@@ -79,17 +81,19 @@ public class MinioChannel {
                             .stream(file.getInputStream(), file.getSize(), -1)
                             .build()
             );
+
+            // Generate a presigned URL using the same key (objectName)
+            return minioClient.getPresignedObjectUrl(
+                    io.minio.GetPresignedObjectUrlArgs.builder()
+                            .method(io.minio.http.Method.GET)
+                            .bucket(BUCKET)
+                            .object(objectName) // Use objectName, not just fileName
+                            .build()
+            );
         } catch (Exception ex) {
             log.error("Error saving image \n {} ", ex.getMessage());
             throw new BussinessException("400", "Unable to upload file", ex);
         }
-        return minioClient.getPresignedObjectUrl(
-                io.minio.GetPresignedObjectUrlArgs.builder()
-                        .method(io.minio.http.Method.GET)
-                        .bucket(BUCKET)
-                        .object(fileName)
-                        .build()
-        );
     }
 
     public byte[] download(String bucket, String name) {

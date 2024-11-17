@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.application_category.ApplicationCategory;
 import com.thesis.code_market.application_framework.ApplicationFramework;
+import com.thesis.code_market.application_images.ApplicationImage;
 import com.thesis.code_market.application_platform.ApplicationPlatform;
 import com.thesis.code_market.application_type.ApplicationType;
 import com.thesis.code_market.developer.Developer;
+import com.thesis.code_market.order.OrderDetail;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -95,6 +97,12 @@ public class Application {
     @JoinColumn(name = "type_id")
     private ApplicationType applicationType;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "application")
+    private List<ApplicationImage> applicationImages;
+
+    @OneToMany(mappedBy = "application")
+    private List<OrderDetail> orderDetailList;
+
     public Application(Application application) {
         this.id = application.getId();
         this.name = application.getName();
@@ -110,6 +118,7 @@ public class Application {
         this.applicationFrameworkList = application.getApplicationFrameworkList();
         this.applicationType = application.getApplicationType();
         this.applicationPlatformList = application.getApplicationPlatformList();
+        this.applicationImages = application.getApplicationImages();
     }
 
     public static Application fromDTO(ApplicationDTO dto) {

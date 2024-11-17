@@ -1,5 +1,8 @@
 package com.thesis.code_market.application;
 
+import com.thesis.code_market.application_images.ApplicationImage;
+import com.thesis.code_market.application_images.ApplicationImageDTO;
+import com.thesis.code_market.application_images.ApplicationImageService;
 import com.thesis.code_market.developer.DeveloperService;
 import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
@@ -28,11 +31,14 @@ public class ApplicationService {
     private DeveloperService developerService;
 
     @Autowired
+    private ApplicationImageService applicationImageService;
+
+    @Autowired
     private MinioChannel minioChannel;
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationService.class);
 
-
+    @Transactional
     ApplicationDTO addApplication(ApplicationInfoRequest request) {
         ApplicationDTO applicationDto = new ApplicationDTO();
         applicationDto.setName(request.getName());
@@ -44,17 +50,17 @@ public class ApplicationService {
         applicationDto.setApplicationType(request.getApplicationType());
         applicationDto.setAuthorId(request.getAuthorId());
         applicationDto.setStatus(1);
+        applicationDto.setStorageCapacity(request.getStorageCapacity());
         Application application = Application.fromDTO(applicationDto);
         application.setDeveloper(developerService.findById(request.getAuthorId()));
         this.applicationRepository.save(application);
-        application.setSourceCode(minioChannel.upload(request.getSourceCode(), "/application/ " + application.getId()));
+        application.setSourceCode(minioChannel.upload(request.getSourceCode(), "application/" + application.getId()));
+        List<ApplicationImage> images = new ArrayList<>();
         for (MultipartFile img : request.getImages()) {
-            if (application.getImages() == null) {
-                application.setImages(minioChannel.upload(img, "/application/ " + application.getId() + "/images"));
-            } else {
-                application.setImages(application.getImages() + ", " + minioChannel.upload(img, "/application/ " + application.getId() + "/images"));
-            }
+            ApplicationImageDTO image = this.applicationImageService.save(application, new ApplicationImageDTO(minioChannel.upload(img, "application/" + application.getId() + "/images")));
+            images.add(new ApplicationImage(image));
         }
+        application.setApplicationImages(images);
         return new ApplicationDTO(application);
     }
 
