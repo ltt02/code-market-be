@@ -42,6 +42,17 @@ public class OrderDetail {
     }
 
     public OrderDetail(OrderDetailDTO orderDetailDto) {
-        this.order = orderDetailDto.getOrderId();
+        this.order = Order.fromDTO(orderDetailDto.getOrder());
+        this.application = Application.fromDTO(orderDetailDto.getApplication());
+    }
+
+    @Override
+    public String toString() {
+        return "OrderDetail{" +
+                "id=" + id +
+                ", total=" + total +
+                ", order=" + order +
+                ", application=" + application +
+                '}';
     }
 }

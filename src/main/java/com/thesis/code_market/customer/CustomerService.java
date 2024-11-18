@@ -45,7 +45,7 @@ public class CustomerService {
         User user = userRepository.findUserByUserName(userName).orElse(null);
 
         if (user != null) {
-            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
+//            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
 //            Hibernate.initialize(user.getApplicationList()); // Eagerly fetch roles
             return modelMapper.map(user, UserDTO.class);
         }

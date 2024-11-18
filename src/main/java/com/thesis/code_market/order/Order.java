@@ -2,6 +2,12 @@ package com.thesis.code_market.order;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.thesis.code_market.application.Application;
+import com.thesis.code_market.application.ApplicationDTO;
+import com.thesis.code_market.application_category.ApplicationCategory;
+import com.thesis.code_market.application_framework.ApplicationFramework;
+import com.thesis.code_market.application_platform.ApplicationPlatform;
+import com.thesis.code_market.application_type.ApplicationType;
 import com.thesis.code_market.coupon.Coupon;
 import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.developer.Developer;
@@ -69,5 +75,37 @@ public class Order {
 
     public Order(OrderToPaymentDTO orderToPaymentDTO) {
         this.total = orderToPaymentDTO.getPrice();
+    }
+
+    public static Order fromDTO(OrderDTO dto) {
+        Order order = new Order();
+        order.setId(dto.getId());
+        order.setCreateDate(dto.getCreateDate());
+//        order.setTotal(dto.getTotal());
+        order.setStatus(dto.getStatus());
+        order.setCustomer(new Customer(dto.getCustomer()));
+        order.setDeveloper(new Developer(dto.getDeveloper()));
+//        List<OrderDetail> orderDetailList = dto.getOrderDetailDtoList().stream()
+//                .map(OrderDetail::new) // Use the constructor
+//                .toList();
+//        order.setOrderDetailList(orderDetailList);
+
+        return order;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", createDate=" + createDate +
+                ", total=" + total +
+                ", status=" + status +
+                ", coupon=" + coupon +
+                ", payment=" + payment +
+                ", orderDetailList=" + orderDetailList +
+                ", customer=" + customer +
+                ", developer=" + developer +
+                ", note='" + note + '\'' +
+                '}';
     }
 }

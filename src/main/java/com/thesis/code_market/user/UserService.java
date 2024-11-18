@@ -45,7 +45,7 @@ public class UserService {
         User user = userRepository.findById(id).orElse(null);
 
         if (user != null) {
-            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
+//            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
             return modelMapper.map(user, UserDTO.class);
         }
         return null;
@@ -55,7 +55,7 @@ public class UserService {
         User user = userRepository.findUserByUserName(userName).orElse(null);
 
         if (user != null) {
-            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
+//            Hibernate.initialize(user.getRoles()); // Eagerly fetch roles
             return modelMapper.map(user, UserDTO.class);
         }
         return null;

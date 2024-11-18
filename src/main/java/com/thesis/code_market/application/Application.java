@@ -123,6 +123,7 @@ public class Application {
 
     public static Application fromDTO(ApplicationDTO dto) {
         Application application = new Application();
+        application.setId(dto.getId());
         application.setName(dto.getName());
         application.setDescription(dto.getDescription());
         application.setPrice(dto.getPrice());

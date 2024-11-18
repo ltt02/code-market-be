@@ -1,6 +1,7 @@
 package com.thesis.code_market.developer;
 
 import com.thesis.code_market.application.Application;
+import com.thesis.code_market.application_framework.ApplicationFramework;
 import com.thesis.code_market.major.Major;
 import com.thesis.code_market.role.Role;
 import com.thesis.code_market.skill.Skill;
@@ -47,11 +48,24 @@ public class Developer extends User {
     @Column(columnDefinition = "boolean default true")
     private Boolean isAvailable;
 
-    public Developer(Long id, String userName, String fullName, String email, String password, String phoneNumber, String avatar, Date dob, Date createdAt, Date updatedAt, List<Role> roles, boolean locked, Boolean isAvailable, String githubProfile, String studentId) {
-        super(id, userName, fullName, email, password, phoneNumber, avatar, dob, createdAt, updatedAt, roles, locked);
+    public Developer(Long id, String userName, String fullName, String email, String password, String phoneNumber, String avatar, Date dob, Date createdAt, Date updatedAt, boolean locked, Boolean isAvailable, String githubProfile, String studentId) {
+        super(id, userName, fullName, email, password, phoneNumber, avatar, dob, createdAt, updatedAt, locked);
         this.isAvailable = isAvailable;
         this.githubProfile = githubProfile;
         this.studentId = studentId;
+    }
+
+    public Developer(DeveloperDTO dto) {
+        super(dto.getUserName(), dto.getFullName(),
+                dto.getEmail(), dto.getPassword(), dto.getPhone(),
+                dto.getAvatar(), dto.getDob());
+        this.studentId = dto.getStudentId();
+        this.major = new Major(dto.getMajor());
+        this.githubProfile = dto.getGithubProfile();
+        List<Skill> skillList = dto.getSkills().stream()
+                .map(Skill::new) // Use the constructor
+                .toList();
+        this.skills = skillList;
     }
 
     @Override

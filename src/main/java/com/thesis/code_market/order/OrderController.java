@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/customers/{customerId}/orders")
@@ -20,12 +21,12 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getOrder(@PathVariable Long orderId) {
         return new ResponseEntity<>(this.orderService.findOrderById(orderId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}/details")
-    public ResponseEntity<ArrayList<OrderDetail>> getAllOrderDetails(@PathVariable Long id) {
+    public ResponseEntity<List<OrderDetailDTO>> getAllOrderDetails(@PathVariable Long id) {
         return new ResponseEntity<>(this.orderService.findAllOrderDetailsByOrder(id), HttpStatus.OK);
     }
 
@@ -37,8 +38,8 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrderById(@PathVariable Long id) {
-        Order order = this.orderService.findOrderById(id);
-        if (order == null) {
+        OrderDTO orderDTO = this.orderService.findOrderById(id);
+        if (orderDTO == null) {
             return new ResponseEntity<>("Can not find order to cancel", HttpStatus.NOT_FOUND);
         }
 
@@ -47,19 +48,19 @@ public class OrderController {
     }
 
     @PostMapping("/{orderId}")
-    public ResponseEntity<ArrayList<OrderDetail>> addOrderDetailsToOrder(
+    public ResponseEntity<List<OrderDetailDTO>> addOrderDetailsToOrder(
             @PathVariable Long orderId, @RequestBody Long[] cartDetailsList) {
         return new ResponseEntity<>(this.orderService.addOrderDetailsToOrder(orderId, cartDetailsList),
                 HttpStatus.CREATED);
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<?> updateOrder(@PathVariable Long orderId, @RequestBody Order order) {
-        System.out.println("New order detail: " + order);
+    public ResponseEntity<?> updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
+        System.out.println("New order detail: " + orderDTO);
         if (this.orderService.findOrderById(orderId) == null) {
             return new ResponseEntity<>("Not found Order", HttpStatus.NOT_FOUND);
         }
-        this.orderService.updateOrder(orderId, order);
+        this.orderService.updateOrder(orderId, orderDTO);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 

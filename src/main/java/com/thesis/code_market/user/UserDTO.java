@@ -25,7 +25,7 @@ public class UserDTO {
     private Date dob;
     private String avatar;
     private Boolean locked;
-    private List<RoleDTO> roles;
+//    private List<RoleDTO> roles;
     private List<ApplicationDTO> applicationList;
 
     public UserDTO(User user) {
@@ -39,6 +39,6 @@ public class UserDTO {
         this.dob = user.getDob();
         this.avatar = user.getAvatar();
         this.locked = user.isLocked();
-        this.roles = user.getRoles().stream().map(RoleDTO::new).collect(Collectors.toList());
+//        this.roles = user.getRoles().stream().map(RoleDTO::new).collect(Collectors.toList());
     }
 }

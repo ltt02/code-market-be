@@ -94,15 +94,15 @@ public class PaymentController {
         }
     }
 
-    @PostMapping("/{orderId}/cod")
-    public ResponseEntity<?> addPaymentByCOD(@PathVariable("orderId") Long orderId, @RequestBody Payment payment) throws ServletException, IOException {
-        Payment newPayment = this.paymentService.addPayment(payment);
-        
-        Order order = this.orderService.findOrderById(orderId);
-        order.setPayment(newPayment);
-        this.orderService.updateOrder(orderId, order);
-
-        return new ResponseEntity<>(newPayment, HttpStatus.OK);
-    }
+//    @PostMapping("/{orderId}/cod")
+//    public ResponseEntity<?> addPaymentByCOD(@PathVariable("orderId") Long orderId, @RequestBody Payment payment) throws ServletException, IOException {
+//        Payment newPayment = this.paymentService.addPayment(payment);
+//
+//        Order order = this.orderService.findOrderById(orderId);
+//        order.setPayment(newPayment);
+//        this.orderService.updateOrder(orderId, order);
+//
+//        return new ResponseEntity<>(newPayment, HttpStatus.OK);
+//    }
 
 }

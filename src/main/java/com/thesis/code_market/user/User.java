@@ -61,10 +61,10 @@ public class User {
         @Temporal(value = TemporalType.TIMESTAMP)
         private Date updatedAt;
 
-        @JsonIgnore
-        @ManyToMany(fetch = FetchType.EAGER)
-        @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-        private List<Role> roles;
+//        @JsonIgnore
+//        @ManyToMany(fetch = FetchType.EAGER)
+//        @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+//        private List<Role> roles;
 
         @Column(columnDefinition = "boolean default false")
         private boolean locked;
@@ -73,4 +73,22 @@ public class User {
         public String getUserType() {
                 return this.getClass().getAnnotation(DiscriminatorValue.class).value();
         }
+
+        public User(String userName, String fullName, String email, String password, String phoneNumber, String avatar, Date dob) {
+                this.userName = userName;
+                this.fullName = fullName;
+                this.email = email;
+                this.password = password;
+                this.phoneNumber = phoneNumber;
+                this.avatar = avatar;
+                this.dob = dob;
+        }
+//        public User fromDto(UserDTO userDTO) {
+//                this.userName = userDTO.getUserName();
+//                this.fullName = userDTO.getFullName();
+//                this.email = userDTO.getEmail();
+//                this.password = userDTO.getPassword();
+//                this.phoneNumber = userDTO.getPhone();
+//                this.avatar = userDTO.getAvatar();
+//        }
 }

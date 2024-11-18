@@ -25,4 +25,8 @@ public class Major {
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "major", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.PERSIST})
     private List<Developer> developers;
+
+    public Major(MajorDTO majorDTO) {
+        this.name = majorDTO.getName();
+    }
 }

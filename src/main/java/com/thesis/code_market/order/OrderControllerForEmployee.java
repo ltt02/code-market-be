@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/OrderForEmployee")
@@ -22,7 +23,7 @@ public class OrderControllerForEmployee {
     }
 
     @GetMapping("/{id}/details")
-    public ResponseEntity<ArrayList<OrderDetail>> getAllOrderDetails(@PathVariable Long id) {
+    public ResponseEntity<List<OrderDetailDTO>> getAllOrderDetails(@PathVariable Long id) {
         return new ResponseEntity<>(this.orderService.findAllOrderDetailsByOrder(id), HttpStatus.OK);
     }
 }

@@ -44,7 +44,7 @@ public class DeveloperService {
         Developer developer = developerRepository.findByUserName(userName).orElse(null);
 
         if (developer != null) {
-            Hibernate.initialize(developer.getRoles()); // Eagerly fetch roles
+//            Hibernate.initialize(developer.getRoles()); // Eagerly fetch roles
 //            Hibernate.initialize(developer.getApplicationList()); // Eagerly fetch roles
             return modelMapper.map(developer, DeveloperDTO.class);
         }

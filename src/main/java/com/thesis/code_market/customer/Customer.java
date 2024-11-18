@@ -12,6 +12,13 @@ import org.springframework.stereotype.Component;
 @DiscriminatorValue("CUSTOMER")
 @EntityListeners(AuditingEntityListener.class)
 public class Customer extends User {
+    public Customer(CustomerDTO customerDTO) {
+        super(customerDTO.getUserName(), customerDTO.getFullName(),
+                customerDTO.getEmail(), customerDTO.getPassword(), customerDTO.getPhone(),
+                customerDTO.getAvatar(), customerDTO.getDob());
+    }
 
-    
+    public Customer() {
+
+    }
 }

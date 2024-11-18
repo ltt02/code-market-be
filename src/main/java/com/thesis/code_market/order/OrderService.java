@@ -2,6 +2,7 @@ package com.thesis.code_market.order;
 
 import com.thesis.code_market.application.Application;
 import com.thesis.code_market.application.ApplicationService;
+import com.thesis.code_market.application_category.ApplicationCategoryDTO;
 import com.thesis.code_market.cart.CartService;
 import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.customer.CustomerService;
@@ -12,10 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -63,8 +62,12 @@ public class OrderService {
     }
 
     @SuppressWarnings("null")
-    public Order findOrderById(Long id) {
-        return this.orderRepository.findById(id).orElse(null);
+    public OrderDTO findOrderById(Long id) {
+        Order order = this.orderRepository.findById(id).orElse(null);
+        if (order != null) {
+            return new OrderDTO(order);
+        }
+        return null;
     }
 
     @SuppressWarnings("null")
@@ -72,25 +75,29 @@ public class OrderService {
         this.orderRepository.deleteById(orderId);
     }
 
-    ArrayList<OrderDetail> addOrderDetailsToOrder(Long orderId, Long[] cartDetailsIdList) {
+    List<OrderDetailDTO> addOrderDetailsToOrder(Long orderId, Long[] cartDetailsIdList) {
+        List<OrderDetailDTO> orderDetailDTOList = new ArrayList<>();
+        Order order = this.orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            Arrays.stream(cartDetailsIdList).forEach(id -> {
+                OrderDetailDTO orderDetailDto = new OrderDetailDTO(this.cartService.findCartDetailById(id));
+                orderDetailDto.setOrder(new OrderDTO(order));
+                orderDetailDTOList.add(orderDetailDto);
+                OrderDetail orderDetail = new OrderDetail(orderDetailDto);
+                this.cartService.deleteCartDetail(id);
+                this.orderDetailRepository.save(orderDetail);
 
-        Arrays.stream(cartDetailsIdList).forEach(id -> {
-            OrderDetailDTO orderDetailDto = new OrderDetailDTO(this.cartService.findCartDetailById(id));
-            OrderDetail orderDetail = new OrderDetail(orderDetailDto);
-            orderDetail.setOrder(this.findOrderById(orderId));
-            this.cartService.deleteCartDetail(id);
-            this.orderDetailRepository.save(orderDetail);
-            
-            Application application = this.applicationService.findApplicationById(orderDetail.getApplication().getId());
+//            Application application = this.applicationService.findApplicationById(orderDetail.getApplication().getId());
 //            application.setSold(application.getSold() + orderDetail.getQuantity());
 //            this.applicationService.updateProductDetail(application);
-        });
-
-        return this.findAllOrderDetailsByOrder(orderId);
+            });
+        }
+        return orderDetailDTOList;
     }
 
-    ArrayList<OrderDetail> findAllOrderDetailsByOrder(Long orderId) {
-        return (ArrayList<OrderDetail>) this.orderDetailRepository.findByOrder_Id(orderId);
+    List<OrderDetailDTO> findAllOrderDetailsByOrder(Long orderId) {
+        List<OrderDetail> orderDetailList = this.orderDetailRepository.findByOrder_Id(orderId);
+        return orderDetailList.stream().map(OrderDetailDTO::new).collect(Collectors.toList());
     }
 
     @SuppressWarnings("null")
@@ -98,24 +105,23 @@ public class OrderService {
         return this.orderDetailRepository.findById(id).orElse(null);
     }
 
-    public void updateOrder(Long orderId, Order order) {
-        Order orderDB = this.findOrderById(orderId);
+    public void updateOrder(Long orderId, OrderDTO orderDTO) {
+        Order orderDB = this.orderRepository.findById(orderId).orElse(null);
 
         // orderDB.setOrderDetails(order.getOrderDetails());
-        if (order.getStatus() != null) {
-            orderDB.setStatus(order.getStatus());
+        if (orderDTO.getStatus() != null) {
+            orderDB.setStatus(orderDTO.getStatus());
         }
-        if (order.getCoupon() != null) {
-            orderDB.setCoupon(order.getCoupon());
+//        if (orderDTO.getCoupon() != null) {
+//            orderDB.setCoupon(orderDTO.getCoupon());
+//        }
+//        if (orderDTO.getPayment() != null) {
+//            orderDB.setPayment(orderDTO.getPayment());
+//        }
+        if (orderDTO.getTotal() != null) {
+            orderDB.setTotal(orderDTO.getTotal());
         }
-        if (order.getPayment() != null) {
-            orderDB.setPayment(order.getPayment());
-        }
-        if (order.getTotal() != null) {
-            orderDB.setTotal(order.getTotal());
-        }
-
-        System.out.println("New order detail saved in DB: " + orderDB);
+//        System.out.println("New order detail saved in DB: " + orderDB);
         this.orderRepository.save(orderDB);
     }
 }
