@@ -40,7 +40,7 @@ public class UserController {
 //    }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<?> getUserById(@PathVariable String username) {
+    public ResponseEntity<?> getUserByUserName(@PathVariable String username) {
         UserDTO user = userService.findByUserName(username);
         if (user == null) {
             return new ResponseEntity<>("This user is not exist", HttpStatus.NOT_FOUND);
