@@ -50,6 +50,16 @@ public class ApplicationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/admin")
+    public ResponseEntity<?> getAllApplicationByAdmin() {
+        List<ApplicationDTO> response = this.applicationService.getAllApplications();
+        if (Objects.isNull(response)) {
+            return new ResponseEntity<>("The list is null", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getApplicationById(@PathVariable Long id) {
         Application application = this.applicationService.findApplicationById(id);

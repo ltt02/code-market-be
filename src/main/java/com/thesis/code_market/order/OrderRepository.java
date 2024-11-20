@@ -9,5 +9,6 @@ import java.util.ArrayList;
 interface OrderRepository extends JpaRepository<Order, Long> {
     
     ArrayList<Order> findByCustomer_Id(Long customerId);
+    ArrayList<Order> findAllByDeveloper_Id(Long developerId);
 }
 

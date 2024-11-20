@@ -1,7 +1,5 @@
 package com.thesis.code_market.order;
 
-import com.thesis.code_market.application_category.ApplicationCategoryDTO;
-import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.customer.CustomerDTO;
 import com.thesis.code_market.developer.DeveloperDTO;
 import lombok.Data;
@@ -38,7 +36,7 @@ public class OrderDTO {
         this.createDate = order.getCreateDate();
         this.total = order.getTotal();
         this.status = order.getStatus();
-//        this.orderDetailDtoList = order.getOrderDetailList().stream().map(OrderDetailDTO::new).collect(Collectors.toList());
+        this.orderDetailDtoList = order.getOrderDetailList().stream().map(orderDetail -> new OrderDetailDTO(orderDetail, true)).collect(Collectors.toList());
         this.customer = new CustomerDTO(order.getCustomer());
         this.developer = new DeveloperDTO(order.getDeveloper());
     }

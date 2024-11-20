@@ -32,7 +32,7 @@ public class OrderDetail {
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "application_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "application_id")
     private Application application;
 
     public OrderDetail(CartDetail cartDetail) {
@@ -42,7 +42,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(OrderDetailDTO orderDetailDto) {
-        this.order = Order.fromDTO(orderDetailDto.getOrder());
+//        this.order = Order.fromDTO(orderDetailDto.getOrder());
         this.application = Application.fromDTO(orderDetailDto.getApplication());
     }
 

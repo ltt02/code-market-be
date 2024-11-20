@@ -1,8 +1,6 @@
 package com.thesis.code_market.order;
 
-import com.thesis.code_market.application.Application;
 import com.thesis.code_market.application.ApplicationService;
-import com.thesis.code_market.application_category.ApplicationCategoryDTO;
 import com.thesis.code_market.cart.CartService;
 import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.customer.CustomerService;
@@ -50,9 +48,18 @@ public class OrderService {
         this.orderRepository.save(order);
     }
 
-    ArrayList<Order> findAllOrders(Long customerId) {
+    List<OrderDTO> findAllOrders(Long customerId) {
         ArrayList<Order> ordersDB = this.orderRepository.findByCustomer_Id(customerId);
-        ArrayList<Order> ordersReverse = new ArrayList<>(ordersDB);
+        List<OrderDTO> orderDTOS = ordersDB.stream().map(OrderDTO::new).toList();
+        List<OrderDTO> ordersReverse = new ArrayList<>(orderDTOS);
+        Collections.reverse(ordersReverse);
+        return ordersReverse;
+    }
+
+    List<OrderDTO> findAllOrdersByDeveloperId(Long developerId) {
+        ArrayList<Order> ordersDB = this.orderRepository.findAllByDeveloper_Id(developerId);
+        List<OrderDTO> orderDTOS = ordersDB.stream().map(OrderDTO::new).toList();
+        List<OrderDTO> ordersReverse = new ArrayList<>(orderDTOS);
         Collections.reverse(ordersReverse);
         return ordersReverse;
     }

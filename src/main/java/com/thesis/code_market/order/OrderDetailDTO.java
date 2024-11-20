@@ -7,14 +7,19 @@ import lombok.Data;
 @Data
 public class OrderDetailDTO {
 
+    private Long id;
     private OrderDTO order;
-//    private Long id;
     private ApplicationDTO application;
 
     // Getters and Setters
     public OrderDetailDTO(OrderDetail orderDetail) {
-//        this.id = orderDetail.getId();
+        this.id = orderDetail.getId();
         this.order = new OrderDTO(orderDetail.getOrder());
+        this.application = new ApplicationDTO(orderDetail.getApplication());
+    }
+
+    public OrderDetailDTO(OrderDetail orderDetail, Boolean isNullOrder) {
+        this.id = orderDetail.getId();
         this.application = new ApplicationDTO(orderDetail.getApplication());
     }
 

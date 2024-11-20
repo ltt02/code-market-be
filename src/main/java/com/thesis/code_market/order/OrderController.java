@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -16,8 +15,13 @@ public class OrderController {
     OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<ArrayList<Order>> getAllOrders(@PathVariable Long customerId) {
+    public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable Long customerId) {
         return new ResponseEntity<>(this.orderService.findAllOrders(customerId), HttpStatus.OK);
+    }
+
+    @GetMapping("/developer/{developerId}")
+    public ResponseEntity<List<OrderDTO>> getAllOrdersByDeveloper(@PathVariable Long developerId) {
+        return new ResponseEntity<>(this.orderService.findAllOrdersByDeveloperId(developerId), HttpStatus.OK);
     }
 
     @GetMapping("/{orderId}")
