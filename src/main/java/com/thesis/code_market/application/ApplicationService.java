@@ -3,6 +3,7 @@ package com.thesis.code_market.application;
 import com.thesis.code_market.application_images.ApplicationImage;
 import com.thesis.code_market.application_images.ApplicationImageDTO;
 import com.thesis.code_market.application_images.ApplicationImageService;
+import com.thesis.code_market.application_type.ApplicationTypeService;
 import com.thesis.code_market.developer.DeveloperService;
 import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,9 @@ public class ApplicationService {
 
     @Autowired
     private ApplicationImageService applicationImageService;
+
+    @Autowired
+    private ApplicationTypeService applicationTypeService;
 
     @Autowired
     private MinioChannel minioChannel;
@@ -122,6 +126,17 @@ public class ApplicationService {
 
     void deleteApplicationById(Long id) {
         this.applicationRepository.deleteById(id);
+    }
+
+    public ApplicationForChartDTO getApplicationsGroupByType() {
+        List<ApplicationGroupByTypeDTO> dto = this.applicationRepository.findApplicationsGroupedByType();
+        List<String> labels = dto.stream().map(ApplicationGroupByTypeDTO::getName).toList();
+        List<Long> counts = dto.stream().map(ApplicationGroupByTypeDTO::getCount).toList();
+
+        ApplicationForChartDTO result = new ApplicationForChartDTO();
+        result.setLabels(labels);
+        result.setCounts(counts);
+        return result;
     }
 
 //    public ArrayList<Application> findApplicationByTypes(ArrayList<ApplicationType> types) {

@@ -261,7 +261,7 @@ INSERT INTO `coupon` (`id`, `capped_at`, `code`, `created_at`, `description`, `e
 -- Table structure for table `customer`
 --
 
-CREATE TABLE `customer` (
+CREATE TABLE `sysAd` (
   `id` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -269,7 +269,7 @@ CREATE TABLE `customer` (
 -- Dumping data for table `customer`
 --
 
-INSERT INTO `customer` (`id`) VALUES
+INSERT INTO `sysAd` (`id`) VALUES
 (6),
 (10),
 (12),
@@ -1265,7 +1265,7 @@ ALTER TABLE `coupon`
 --
 -- Indexes for table `customer`
 --
-ALTER TABLE `customer`
+ALTER TABLE `sysAd`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -1530,7 +1530,7 @@ ALTER TABLE `coupon`
 --
 -- Constraints for table `customer`
 --
-ALTER TABLE `customer`
+ALTER TABLE `sysAd`
   ADD CONSTRAINT `FKg2o3t8h0g17smtr9jgypagdtv` FOREIGN KEY (`id`) REFERENCES `user` (`id`);
 
 --

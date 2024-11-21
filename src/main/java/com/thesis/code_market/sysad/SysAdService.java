@@ -1,4 +1,4 @@
-package com.thesis.code_market.customer;
+package com.thesis.code_market.sysad;
 
 import com.thesis.code_market.cart.Cart;
 import com.thesis.code_market.cart.CartRepository;
@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 @Service
 @Transactional
-public class CustomerService {
+public class SysAdService {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private SysAdRepository sysAdRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -31,13 +31,13 @@ public class CustomerService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Initialize BCrypt
 
-    public ArrayList<Customer> findAll() {
-        return (ArrayList<Customer>) customerRepository.findAll();
+    public ArrayList<SysAd> findAll() {
+        return (ArrayList<SysAd>) sysAdRepository.findAll();
     }
 
     @SuppressWarnings("null")
-    public Customer findById(Long id) {
-        return customerRepository.findById(id).orElse(null);
+    public SysAd findById(Long id) {
+        return sysAdRepository.findById(id).orElse(null);
     }
 
     public UserDTO findByUserName(String userName) {
@@ -52,9 +52,9 @@ public class CustomerService {
     }
 
     @SuppressWarnings("null")
-    public void add(Customer customer) {
-        customer.setPassword(passwordEncoder.encode(customer.getPassword())); // Hash password before saving
-        User savedUser = this.customerRepository.save(customer);
+    public void add(SysAd sysAd) {
+        sysAd.setPassword(passwordEncoder.encode(sysAd.getPassword())); // Hash password before saving
+        User savedUser = this.sysAdRepository.save(sysAd);
         Cart cart = new Cart();
         cart.setUser(savedUser);
         cartRepository.save(cart);
@@ -66,33 +66,33 @@ public class CustomerService {
 
     @SuppressWarnings("null")
     public void deleteById(Long id) {
-        this.customerRepository.deleteById(id);
+        this.sysAdRepository.deleteById(id);
     }
 
-    public long getCustomerCount(){
-        return this.customerRepository.count();
+    public long getSysAdCount(){
+        return this.sysAdRepository.count();
     }
 
-//    public Customer updateCustomer(Long id, Customer customer) {
-//        Customer existingCustomer = findById(id);
-//        if (existingCustomer != null) {
-//            existingCustomer.setLocked(!existingCustomer.isLocked());
-//            this.customerRepository.save(existingCustomer);
-//            return existingCustomer;
+//    public SysAd updateSysAd(Long id, SysAd sysAd) {
+//        SysAd existingSysAd = findById(id);
+//        if (existingSysAd != null) {
+//            existingSysAd.setLocked(!existingSysAd.isLocked());
+//            this.sysAdRepository.save(existingSysAd);
+//            return existingSysAd;
 //        }
 //        return null;
 //    }
 //
-//    public Customer updateCustomerInfo(Long id, Customer customer) {
-//        Customer existingCustomer = findById(id);
-//        if (existingCustomer != null) {
-//            System.out.println(customer);
-//            existingCustomer.setFullName(customer.getFullName());
-//            existingCustomer.setEmail(customer.getEmail());
-//            existingCustomer.setPhoneNumber(customer.getPhoneNumber());
-//            existingCustomer.setDob(customer.getDob());
-//            this.customerRepository.save(existingCustomer);
-//            return existingCustomer;
+//    public SysAd updateSysAdInfo(Long id, SysAd sysAd) {
+//        SysAd existingSysAd = findById(id);
+//        if (existingSysAd != null) {
+//            System.out.println(sysAd);
+//            existingSysAd.setFullName(sysAd.getFullName());
+//            existingSysAd.setEmail(sysAd.getEmail());
+//            existingSysAd.setPhoneNumber(sysAd.getPhoneNumber());
+//            existingSysAd.setDob(sysAd.getDob());
+//            this.sysAdRepository.save(existingSysAd);
+//            return existingSysAd;
 //        }
 //        return null;
 //    }

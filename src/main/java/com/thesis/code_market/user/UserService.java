@@ -2,14 +2,17 @@ package com.thesis.code_market.user;
 
 import com.thesis.code_market.cart.Cart;
 import com.thesis.code_market.cart.CartRepository;
+import com.thesis.code_market.customer.CustomerService;
+import com.thesis.code_market.developer.DeveloperService;
+import com.thesis.code_market.sysad.SysAdService;
 import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +27,15 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private CustomerService customerService;
+
+    @Autowired
+    private DeveloperService developerService;
+
+    @Autowired
+    private SysAdService sysAdService;
 
     @Autowired
     private MinioChannel minioChannel;
@@ -107,5 +119,13 @@ public class UserService {
         userDTO.setPassword(request.getPassword());
 //        userDTO.setAvatar(minioChannel.upload(request.getAvatar()));
         return userDTO;
+    }
+
+    public List<Long> getUserCountsGroupByType() {
+        List<Long> counts = new ArrayList<>();
+        counts.add(this.customerService.getCustomerCount());
+        counts.add(this.developerService.getDeveloperCount());
+        counts.add(this.sysAdService.getSysAdCount());
+        return counts;
     }
 }

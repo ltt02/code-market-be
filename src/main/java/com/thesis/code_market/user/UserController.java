@@ -137,4 +137,9 @@ public class UserController {
     public ResponseEntity<?> updateInfo(UserInfoRequest request) {
         return new ResponseEntity<>(this.userService.updateInfo(request), HttpStatus.OK);
     }
+
+    @GetMapping("/count-group-by-type")
+    public List<Long> countUsersGroupByType() {
+        return this.userService.getUserCountsGroupByType();
+    }
 }

@@ -10,6 +10,7 @@ import com.thesis.code_market.application_type.ApplicationTypeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +40,21 @@ public class ApplicationController {
             return new ResponseEntity<>("The list is null", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/most-sale")
+    public ResponseEntity<?> getMostSaleApplications() {
+        List<ApplicationDTO> mostSaleApplications = this.applicationService.getMostDownloadedApplications();
+        if (CollectionUtils.isEmpty(mostSaleApplications)) {
+            return new ResponseEntity<>("The list is null", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(mostSaleApplications, HttpStatus.OK);
+    }
+
+    @GetMapping("/group-by-type")
+    public ResponseEntity<?> getApplicationsGroupByType() {
+        ApplicationForChartDTO response = this.applicationService.getApplicationsGroupByType();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/developer/{developerId}")

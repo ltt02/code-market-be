@@ -1,20 +1,15 @@
 package com.thesis.code_market.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.thesis.code_market.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.List;
 
-@Component
 @Entity
 @Data
 @AllArgsConstructor
@@ -69,10 +64,27 @@ public class User {
         @Column(columnDefinition = "boolean default false")
         private boolean locked;
 
+        @Column(name = "user_type", insertable = false, updatable = false)
+        private String userType;
+
+        public User(Long id, String userName, String fullName, String email, String password, String phoneNumber, String avatar, Date dob, Date createdAt, Date updatedAt, boolean locked) {
+                this.id = id;
+                this.userName = userName;
+                this.fullName = fullName;
+                this.email = email;
+                this.password = password;
+                this.phoneNumber = phoneNumber;
+                this.avatar = avatar;
+                this.dob = dob;
+                this.createdAt = createdAt;
+                this.updatedAt = updatedAt;
+                this.locked = locked;
+        }
+
         @Transient
         public String getUserType() {
-                return this.getClass().getAnnotation(DiscriminatorValue.class).value();
-        }
+                DiscriminatorValue discriminatorValue = this.getClass().getAnnotation(DiscriminatorValue.class);
+                return discriminatorValue != null ? discriminatorValue.value() : null;        }
 
         public User(String userName, String fullName, String email, String password, String phoneNumber, String avatar, Date dob) {
                 this.userName = userName;

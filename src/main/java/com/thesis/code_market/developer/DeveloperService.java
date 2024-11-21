@@ -5,7 +5,6 @@ import com.thesis.code_market.cart.CartRepository;
 import com.thesis.code_market.user.User;
 import com.thesis.code_market.user.UserRepository;
 import jakarta.transaction.Transactional;
-import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -69,6 +68,9 @@ public class DeveloperService {
         this.developerRepository.deleteById(id);
     }
 
+    public long getDeveloperCount(){
+        return this.developerRepository.count();
+    }
 //    public Customer updateCustomer(Long id, Customer customer) {
 //        Customer existingCustomer = findById(id);
 //        if (existingCustomer != null) {
