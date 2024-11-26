@@ -6,6 +6,9 @@ import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.customer.CustomerService;
 import com.thesis.code_market.developer.Developer;
 import com.thesis.code_market.developer.DeveloperService;
+import com.thesis.code_market.payment.Payment;
+import com.thesis.code_market.payment.PaymentRepository;
+import com.thesis.code_market.payment.PaymentService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,9 @@ public class OrderService {
 
     @Autowired
     private CartService cartService;
+
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @Autowired
     private ApplicationService applicationService;
@@ -112,12 +118,12 @@ public class OrderService {
         return this.orderDetailRepository.findById(id).orElse(null);
     }
 
-    public void updateOrder(Long orderId, OrderDTO orderDTO) {
+    public void updateOrder(Long orderId, OrderPaymentUpdateDTO dto) {
         Order orderDB = this.orderRepository.findById(orderId).orElse(null);
 
         // orderDB.setOrderDetails(order.getOrderDetails());
-        if (orderDTO.getStatus() != null) {
-            orderDB.setStatus(orderDTO.getStatus());
+        if (dto.getStatus() != null) {
+            orderDB.setStatus(dto.getStatus());
         }
 //        if (orderDTO.getCoupon() != null) {
 //            orderDB.setCoupon(orderDTO.getCoupon());
@@ -125,9 +131,8 @@ public class OrderService {
 //        if (orderDTO.getPayment() != null) {
 //            orderDB.setPayment(orderDTO.getPayment());
 //        }
-        if (orderDTO.getTotal() != null) {
-            orderDB.setTotal(orderDTO.getTotal());
-        }
+        Payment payment = this.paymentRepository.findById(dto.getPaymentId()).orElse(null);
+        orderDB.setPayment(payment);
 //        System.out.println("New order detail saved in DB: " + orderDB);
         this.orderRepository.save(orderDB);
     }

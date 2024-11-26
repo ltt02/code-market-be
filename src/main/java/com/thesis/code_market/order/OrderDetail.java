@@ -42,7 +42,7 @@ public class OrderDetail {
     }
 
     public OrderDetail(OrderDetailDTO orderDetailDto) {
-//        this.order = Order.fromDTO(orderDetailDto.getOrder());
+        this.order = Order.fromDTO(orderDetailDto.getOrder());
         this.application = Application.fromDTO(orderDetailDto.getApplication());
     }
 

@@ -19,7 +19,7 @@ public class OrderDetailDTO {
     }
 
     public OrderDetailDTO(OrderDetail orderDetail, Boolean isNullOrder) {
-        this.id = orderDetail.getId();
+//        this.id = orderDetail.getId();
         this.application = new ApplicationDTO(orderDetail.getApplication());
     }
 

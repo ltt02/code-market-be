@@ -59,12 +59,12 @@ public class OrderController {
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<?> updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
-        System.out.println("New order detail: " + orderDTO);
+    public ResponseEntity<?> updateOrder(@PathVariable Long orderId, @RequestBody OrderPaymentUpdateDTO dto) {
+//        System.out.println("New order detail: " + orderDTO);
         if (this.orderService.findOrderById(orderId) == null) {
             return new ResponseEntity<>("Not found Order", HttpStatus.NOT_FOUND);
         }
-        this.orderService.updateOrder(orderId, orderDTO);
+        this.orderService.updateOrder(orderId, dto);
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 

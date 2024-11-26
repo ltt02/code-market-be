@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByUserName(String userName);
 
-    @Query(value = "SELECT u.userType, COUNT(u) FROM User u GROUP BY u.userType", nativeQuery = true)
+    @Query(value = "SELECT user_type, COUNT(*) FROM user GROUP BY user_type", nativeQuery = true)
     List<Object[]> countUsersByUserType();
 }
