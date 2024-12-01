@@ -83,13 +83,15 @@ public class MinioChannel {
             );
 
             // Generate a presigned URL using the same key (objectName)
-            return minioClient.getPresignedObjectUrl(
+            minioClient.getPresignedObjectUrl(
                     io.minio.GetPresignedObjectUrlArgs.builder()
                             .method(io.minio.http.Method.GET)
                             .bucket(BUCKET)
                             .object(objectName) // Use objectName, not just fileName
                             .build()
             );
+
+            return "http://127.0.0.1:9000/" + BUCKET + "/" + objectName;
         } catch (Exception ex) {
             log.error("Error saving image \n {} ", ex.getMessage());
             throw new BussinessException("400", "Unable to upload file", ex);
