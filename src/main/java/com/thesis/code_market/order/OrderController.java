@@ -19,6 +19,11 @@ public class OrderController {
         return new ResponseEntity<>(this.orderService.findAllOrders(customerId), HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<OrderDTO>> getAll(@PathVariable Long customerId) {
+        return new ResponseEntity<>(this.orderService.findAll(), HttpStatus.OK);
+    }
+
     @GetMapping("/developer/{developerId}")
     public ResponseEntity<List<OrderDTO>> getAllOrdersByDeveloper(@PathVariable Long developerId) {
         return new ResponseEntity<>(this.orderService.findAllOrdersByDeveloperId(developerId), HttpStatus.OK);

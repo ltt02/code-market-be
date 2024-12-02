@@ -18,7 +18,7 @@ public class OrderControllerForEmployee {
     OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<ArrayList<Order>> getAllOrders() {
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
         return new ResponseEntity<>(this.orderService.findAll(), HttpStatus.OK);
     }
 

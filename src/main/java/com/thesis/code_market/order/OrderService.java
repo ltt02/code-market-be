@@ -70,8 +70,12 @@ public class OrderService {
         return ordersReverse;
     }
 
-    ArrayList<Order> findAll() {
-        return (ArrayList<Order>) this.orderRepository.findAll();
+    List<OrderDTO> findAll() {
+        List<Order> ordersDB = this.orderRepository.findAll();
+        List<OrderDTO> orderDTOS = ordersDB.stream().map(OrderDTO::new).toList();
+        List<OrderDTO> ordersReverse = new ArrayList<>(orderDTOS);
+        Collections.reverse(ordersReverse);
+        return ordersReverse;
     }
 
     @SuppressWarnings("null")
