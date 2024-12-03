@@ -113,11 +113,25 @@ public class UserService {
         return null;
     }
 
-    public UserDTO updateInfo(UserInfoRequest request) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setUserName(request.getUsername());
-        userDTO.setPassword(request.getPassword());
-//        userDTO.setAvatar(minioChannel.upload(request.getAvatar()));
+    public UserDTO updateInfo(Long id, UserDTO request) {
+        User user = userRepository.findById(id).orElse(null);
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        if (user != null) {
+            if (request.getFullName() != user.getFullName()) {
+                user.setFullName(request.getFullName());
+            }
+            if (request.getDob() != user.getDob()) {
+                user.setDob(request.getDob());
+            }
+            if (request.getEmail() != user.getEmail()) {
+                user.setEmail(request.getEmail());
+            }
+            if (request.getPhone() != user.getPhoneNumber()) {
+                user.setPhoneNumber(request.getPhone());
+            }
+            User temp = this.userRepository.save(user);
+            userDTO = modelMapper.map(temp, UserDTO.class);
+        }
         return userDTO;
     }
 

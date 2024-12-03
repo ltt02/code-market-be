@@ -133,9 +133,9 @@ public class UserController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<?> updateInfo(UserInfoRequest request) {
-        return new ResponseEntity<>(this.userService.updateInfo(request), HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateInfo(@PathVariable Long id, @RequestBody UserDTO request) {
+        return new ResponseEntity<>(this.userService.updateInfo(id, request), HttpStatus.OK);
     }
 
     @GetMapping("/count-group-by-type")
