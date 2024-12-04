@@ -2,12 +2,6 @@ package com.thesis.code_market.order;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.thesis.code_market.application.Application;
-import com.thesis.code_market.application.ApplicationDTO;
-import com.thesis.code_market.application_category.ApplicationCategory;
-import com.thesis.code_market.application_framework.ApplicationFramework;
-import com.thesis.code_market.application_platform.ApplicationPlatform;
-import com.thesis.code_market.application_type.ApplicationType;
 import com.thesis.code_market.coupon.Coupon;
 import com.thesis.code_market.customer.Customer;
 import com.thesis.code_market.developer.Developer;
@@ -57,7 +51,7 @@ public class Order {
     @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
     private List<OrderDetail> orderDetailList;
 
     @ManyToOne

@@ -1,6 +1,7 @@
 package com.thesis.code_market.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.thesis.code_market.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -45,6 +47,9 @@ public class User {
         @Temporal(value = TemporalType.DATE)
         @JsonFormat(pattern = "yyyy-MM-dd")
         private Date dob;
+
+        @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+        private List<Review> reviews;
 
         @Column(name = "created_at")
         @Temporal(value = TemporalType.TIMESTAMP)
@@ -95,12 +100,12 @@ public class User {
                 this.avatar = avatar;
                 this.dob = dob;
         }
-//        public User fromDto(UserDTO userDTO) {
-//                this.userName = userDTO.getUserName();
-//                this.fullName = userDTO.getFullName();
-//                this.email = userDTO.getEmail();
-//                this.password = userDTO.getPassword();
-//                this.phoneNumber = userDTO.getPhone();
-//                this.avatar = userDTO.getAvatar();
-//        }
+        public static User fromDto(UserDTO userDTO) {
+                User user = new User();
+                user.setId(userDTO.getId());
+                user.setFullName(userDTO.getFullName());
+                user.setEmail(userDTO.getEmail());
+                user.setPhoneNumber(userDTO.getPhone());
+                return user;
+        }
 }

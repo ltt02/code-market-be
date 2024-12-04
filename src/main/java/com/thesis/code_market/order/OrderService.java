@@ -8,7 +8,6 @@ import com.thesis.code_market.developer.Developer;
 import com.thesis.code_market.developer.DeveloperService;
 import com.thesis.code_market.payment.Payment;
 import com.thesis.code_market.payment.PaymentRepository;
-import com.thesis.code_market.payment.PaymentService;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +118,8 @@ public class OrderService {
 
     @SuppressWarnings("null")
     public OrderDetail findOrderDetailById(Long id) {
-        return this.orderDetailRepository.findById(id).orElse(null);
+        OrderDetail orderDetail = this.orderDetailRepository.findById(id).orElse(null);
+        return orderDetail;
     }
 
     public void updateOrder(Long orderId, OrderPaymentUpdateDTO dto) {

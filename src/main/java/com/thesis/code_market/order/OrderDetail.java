@@ -2,6 +2,7 @@ package com.thesis.code_market.order;
 
 import com.thesis.code_market.application.Application;
 import com.thesis.code_market.cart.CartDetail;
+import com.thesis.code_market.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 @Entity
@@ -34,6 +37,9 @@ public class OrderDetail {
     @ManyToOne
     @JoinColumn(name = "application_id")
     private Application application;
+
+    @OneToMany(mappedBy = "orderDetail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
     public OrderDetail(CartDetail cartDetail) {
         this();

@@ -135,6 +135,21 @@ public class UserService {
         return userDTO;
     }
 
+    @Transactional
+    public User changePassword(Long id, PasswordChangeRequest request) {
+        User existingUser = userRepository.findById(id).orElse(null);
+        User result = new User();
+        if (existingUser != null) {
+            if (passwordEncoder.encode(request.getCurrentPassword()) != existingUser.getPassword()) {
+                return null;
+            } else {
+                existingUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                result = this.userRepository.save(existingUser);
+            }
+        }
+        return result;
+    }
+
     public List<Long> getUserCountsGroupByType() {
         List<Long> counts = new ArrayList<>();
         counts.add(this.customerService.getCustomerCount());

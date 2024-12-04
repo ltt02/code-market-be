@@ -1,5 +1,7 @@
 package com.thesis.code_market.order;
 
+import com.thesis.code_market.review.ReviewDTO;
+import com.thesis.code_market.review.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,9 @@ public class OrderController {
 
     @Autowired
     OrderService orderService;
+
+    @Autowired
+    ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders(@PathVariable Long customerId) {
@@ -37,6 +42,11 @@ public class OrderController {
     @GetMapping("/{id}/details")
     public ResponseEntity<List<OrderDetailDTO>> getAllOrderDetails(@PathVariable Long id) {
         return new ResponseEntity<>(this.orderService.findAllOrderDetailsByOrder(id), HttpStatus.OK);
+    }
+
+    @PostMapping("/detail/{detailId}")
+    public ResponseEntity<?> addReviewToOrderDetail(@PathVariable Long detailId, @RequestBody ReviewDTO review) {
+        return new ResponseEntity<>(this.reviewService.addReview(detailId, review), HttpStatus.OK);
     }
 
     @PostMapping("/author/{authorId}")

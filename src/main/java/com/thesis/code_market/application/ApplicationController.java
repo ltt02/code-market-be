@@ -7,6 +7,8 @@ import com.thesis.code_market.application_framework.ApplicationFrameworkDTO;
 import com.thesis.code_market.application_images.ApplicationImageService;
 import com.thesis.code_market.application_platform.ApplicationPlatformDTO;
 import com.thesis.code_market.application_type.ApplicationTypeDTO;
+import com.thesis.code_market.review.ReviewDTO;
+import com.thesis.code_market.review.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,9 @@ public class ApplicationController {
 
     @Autowired
     ApplicationImageService applicationImageService;
+
+    @Autowired
+    ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<?> getAllApplications() {
@@ -116,6 +121,15 @@ public class ApplicationController {
         );
         ApplicationDTO response = this.applicationService.addApplication(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<?> getApplicationReviews(@PathVariable Long id) {
+        List<ReviewDTO> reviews = this.reviewService.findAllByApplicationId(id);
+        if (CollectionUtils.isEmpty(reviews)) {
+            return new ResponseEntity<>("There is no reviews", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
     }
 
 //    @PutMapping("/{id}")

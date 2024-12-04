@@ -138,6 +138,11 @@ public class UserController {
         return new ResponseEntity<>(this.userService.updateInfo(id, request), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody PasswordChangeRequest request) {
+        return new ResponseEntity<>(this.userService.changePassword(id, request), HttpStatus.OK);
+    }
+
     @GetMapping("/count-group-by-type")
     public List<Long> countUsersGroupByType() {
         return this.userService.getUserCountsGroupByType();
