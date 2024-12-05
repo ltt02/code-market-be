@@ -1,5 +1,6 @@
 package com.thesis.code_market.payment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.thesis.code_market.order.Order;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,6 +43,7 @@ public class Payment {
     @Column(columnDefinition = "TEXT")
     private String paymentUrl;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "payment")
     private List<Order> orderList;
 

@@ -5,6 +5,7 @@ import com.thesis.code_market.order.OrderService;
 import com.thesis.code_market.user.User;
 import com.thesis.code_market.user.UserDTO;
 import com.thesis.code_market.user.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class ReviewService {
         return reviewsReverse;
     }
 
+    @Transactional
     public Review addReview(Long orderDetailId, ReviewDTO reviewDTO) {
         Review review = new Review();
         OrderDetail orderDetail = this.orderService.findOrderDetailById(orderDetailId);

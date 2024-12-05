@@ -1,13 +1,19 @@
 package com.thesis.code_market.customer;
 
+import com.thesis.code_market.application.ApplicationDTO;
+import com.thesis.code_market.application.ApplicationService;
+import com.thesis.code_market.review.ReviewDTO;
+import com.thesis.code_market.review.ReviewService;
 import com.thesis.code_market.user.User;
 import com.thesis.code_market.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
@@ -15,6 +21,12 @@ public class CustomerController {
 
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    ReviewService reviewService;
+
+    @Autowired
+    ApplicationService applicationService;
 
     @GetMapping
     public ArrayList<Customer> getAllCustomers() {
@@ -114,6 +126,15 @@ public class CustomerController {
             return new ResponseEntity<>(getNewCustomer, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(existingCustomer, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}/reviewed-applications")
+    public ResponseEntity<?> getApplicationReviewedByCustomer(@PathVariable Long id) {
+        List<ApplicationDTO> applicationDTOList = this.applicationService.findAllReviewedByCustomerId(id);
+        if (CollectionUtils.isEmpty(applicationDTOList)) {
+            return new ResponseEntity<>("There is no applications", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(applicationDTOList, HttpStatus.OK);
     }
 
 //    @PutMapping("/{id}/updateLockedStatus")

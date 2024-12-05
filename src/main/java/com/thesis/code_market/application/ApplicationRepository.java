@@ -31,4 +31,11 @@ interface ApplicationRepository extends JpaRepository<Application, Long> {
             order by at.name
             """)
     List<ApplicationGroupByTypeDTO> findApplicationsGroupedByType();
+
+    @Query(value = "select distinct a.* from application a " +
+            "join order_detail od on od.application_id = a.id " +
+            "join customer_order co on co.id = od.order_id " +
+            "where co.customer_id = :customerId "
+            , nativeQuery = true)
+    List<Application> findAllReviewedByCustomer(Long customerId);
 }

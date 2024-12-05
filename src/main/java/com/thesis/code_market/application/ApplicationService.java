@@ -5,6 +5,8 @@ import com.thesis.code_market.application_images.ApplicationImageDTO;
 import com.thesis.code_market.application_images.ApplicationImageService;
 import com.thesis.code_market.application_type.ApplicationTypeService;
 import com.thesis.code_market.developer.DeveloperService;
+import com.thesis.code_market.review.Review;
+import com.thesis.code_market.review.ReviewDTO;
 import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -18,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -137,6 +140,12 @@ public class ApplicationService {
         result.setLabels(labels);
         result.setCounts(counts);
         return result;
+    }
+
+    public List<ApplicationDTO> findAllReviewedByCustomerId(Long customerId) {
+        List<Application> applicationList = this.applicationRepository.findAllReviewedByCustomer(customerId);
+        List<ApplicationDTO> applicationDTOList = applicationList.stream().map(ApplicationDTO::new).toList();
+        return applicationDTOList;
     }
 
 //    public ArrayList<Application> findApplicationByTypes(ArrayList<ApplicationType> types) {
