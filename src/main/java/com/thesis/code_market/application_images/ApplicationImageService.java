@@ -23,9 +23,18 @@ public class ApplicationImageService {
     @Autowired
     private MinioChannel minioChannel;
 
+    public ApplicationImage save(ApplicationImage applicationImage) {
+        return this.applicationImageRepository.save(applicationImage);
+    }
+
     public List<ApplicationImageDTO> findAll() {
         List<ApplicationImage> images = this.applicationImageRepository.findAll();
         return images.stream().map(ApplicationImageDTO::new).toList();
+    }
+
+    public List<ApplicationImage> findAllNotDTOByApplicationId(Long id) {
+        List<ApplicationImage> images = this.applicationImageRepository.findAllByApplicationId(id);
+        return images;
     }
 
     public List<ApplicationImageDTO> findAllByApplicationId(Long id) {

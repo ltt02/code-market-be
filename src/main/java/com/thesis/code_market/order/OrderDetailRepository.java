@@ -4,10 +4,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
-interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
     
     ArrayList<OrderDetail> findByOrder_Id(Long orderId);
+
+    List<OrderDetail> findAllByApplicationId(Long applicationId);
 }
 

@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -122,6 +123,15 @@ public class OrderService {
         return orderDetail;
     }
 
+    public List<OrderDetail> findAllByApplicationId(Long applicationId) {
+        List<OrderDetail> orderDetailList = this.orderDetailRepository.findAllByApplicationId(applicationId);
+        return orderDetailList;
+    }
+
+    public OrderDetail saveDetail(OrderDetail orderDetail) {
+        return this.orderDetailRepository.save(orderDetail);
+    }
+
     public void updateOrder(Long orderId, OrderPaymentUpdateDTO dto) {
         Order orderDB = this.orderRepository.findById(orderId).orElse(null);
 
@@ -139,5 +149,36 @@ public class OrderService {
         orderDB.setPayment(payment);
 //        System.out.println("New order detail saved in DB: " + orderDB);
         this.orderRepository.save(orderDB);
+    }
+
+    public List<OrderAmountByPeriodDTO> mapToDTO(List<Object[]> results) {
+        return results.stream()
+                .map(row -> new OrderAmountByPeriodDTO(
+                        row[0].toString(),
+                        ((BigDecimal) row[1]).floatValue() // Hoặc cast sang kiểu phù hợp
+                ))
+                .toList();
+    }
+
+    public List<OrderAmountByPeriodDTO> sumTotalGroupBy(String period, Date startDate, Date endDate) {
+        switch (period) {
+            case "week" -> {
+                return mapToDTO(this.orderRepository.sumTotalGroupByWeek(startDate, endDate));
+            }
+            case "month" -> {
+                return mapToDTO(this.orderRepository.sumTotalGroupByMonth(startDate, endDate));
+
+            }
+            case "quarter" -> {
+                return mapToDTO(this.orderRepository.sumTotalGroupByQuarter(startDate, endDate));
+
+            }
+            case "year" -> {
+                return mapToDTO(this.orderRepository.sumTotalGroupByYear(startDate, endDate));
+
+            }
+            default -> {}
+        }
+        return null;
     }
 }

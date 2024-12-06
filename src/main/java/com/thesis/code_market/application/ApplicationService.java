@@ -5,6 +5,8 @@ import com.thesis.code_market.application_images.ApplicationImageDTO;
 import com.thesis.code_market.application_images.ApplicationImageService;
 import com.thesis.code_market.application_type.ApplicationTypeService;
 import com.thesis.code_market.developer.DeveloperService;
+import com.thesis.code_market.order.OrderDetail;
+import com.thesis.code_market.order.OrderDetailRepository;
 import com.thesis.integration.minio.MinioChannel;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
@@ -36,6 +38,9 @@ public class ApplicationService {
 
     @Autowired
     private ApplicationTypeService applicationTypeService;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     @Autowired
     private MinioChannel minioChannel;
@@ -124,7 +129,50 @@ public class ApplicationService {
         return this.applicationRepository.findAllById(result);
     }
 
+    void sendDeleteRequest(Long id) {
+        Application application = this.applicationRepository.findById(id).orElse(null);
+        application.setStatus(4);
+        this.applicationRepository.save(application);
+    }
+
+    void sendUpdateRequest(Long id) {
+        Application application = this.applicationRepository.findById(id).orElse(null);
+        application.setStatus(1);
+        this.applicationRepository.save(application);
+    }
+
+    void delete(Long id) {
+        Application application = this.applicationRepository.findById(id).orElse(null);
+        application.setStatus(5);
+        this.applicationRepository.save(application);
+    }
+
+    void accept(Long id) {
+        Application application = this.applicationRepository.findById(id).orElse(null);
+        application.setStatus(2);
+        this.applicationRepository.save(application);
+    }
+
+    void reject(Long id) {
+        Application application = this.applicationRepository.findById(id).orElse(null);
+        application.setStatus(3);
+        this.applicationRepository.save(application);
+    }
+
     void deleteApplicationById(Long id) {
+        List<ApplicationImage> imageList = this.applicationImageService.findAllNotDTOByApplicationId(id);
+        for (ApplicationImage image : imageList) {
+            image.setApplication(null);
+            this.applicationImageService.save(image);
+        }
+
+        List<OrderDetail> orderDetailList = this.orderDetailRepository.findAllByApplicationId(id);
+        OrderDetail detail = new OrderDetail();
+        for (OrderDetail orderDetail : orderDetailList) {
+            orderDetail.setApplication(null);
+            detail = this.orderDetailRepository.save(orderDetail);
+        }
+
         this.applicationRepository.deleteById(id);
     }
 

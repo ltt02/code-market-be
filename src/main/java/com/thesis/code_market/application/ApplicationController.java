@@ -143,6 +143,61 @@ public class ApplicationController {
 //        return new ResponseEntity<>(updatedApplication, HttpStatus.OK);
 //    }
 
+    @PutMapping("/{id}/request")
+    public ResponseEntity<?> sendDeleteRequest(@PathVariable Long id) {
+        Application application = this.applicationService.findApplicationById(id);
+        if (application == null) {
+            return new ResponseEntity<>("Can not find application to delete", HttpStatus.NOT_FOUND);
+        }
+
+        this.applicationService.sendDeleteRequest(id);
+        return new ResponseEntity<>("Send request successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/update-request")
+    public ResponseEntity<?> sendUpdateRequest(@PathVariable Long id) {
+        Application application = this.applicationService.findApplicationById(id);
+        if (application == null) {
+            return new ResponseEntity<>("Can not find application to update", HttpStatus.NOT_FOUND);
+        }
+
+        this.applicationService.sendUpdateRequest(id);
+        return new ResponseEntity<>("Send request successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/delete")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        Application application = this.applicationService.findApplicationById(id);
+        if (application == null) {
+            return new ResponseEntity<>("Can not find application to delete", HttpStatus.NOT_FOUND);
+        }
+
+        this.applicationService.delete(id);
+        return new ResponseEntity<>("Delete successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/accept")
+    public ResponseEntity<?> accept(@PathVariable Long id) {
+        Application application = this.applicationService.findApplicationById(id);
+        if (application == null) {
+            return new ResponseEntity<>("Can not find application to accept", HttpStatus.NOT_FOUND);
+        }
+
+        this.applicationService.accept(id);
+        return new ResponseEntity<>("Accept successfully", HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<?> reject(@PathVariable Long id) {
+        Application application = this.applicationService.findApplicationById(id);
+        if (application == null) {
+            return new ResponseEntity<>("Can not find application to reject", HttpStatus.NOT_FOUND);
+        }
+
+        this.applicationService.reject(id);
+        return new ResponseEntity<>("Reject successfully", HttpStatus.OK);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteApplicationById(@PathVariable Long id) {

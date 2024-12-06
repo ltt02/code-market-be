@@ -83,4 +83,9 @@ public class OrderController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
+    @GetMapping("/amount-chart")
+    public List<OrderAmountByPeriodDTO> sumTotalGroupBy(@RequestBody OrderAmountByPeriodRequest request) {
+        return this.orderService.sumTotalGroupBy(request.getPeriod(), request.getStartDate(), request.getEndDate());
+    }
+
 }
