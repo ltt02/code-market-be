@@ -59,6 +59,7 @@ public class ApplicationService {
         applicationDto.setApplicationType(request.getApplicationType());
         applicationDto.setAuthorId(request.getAuthorId());
         applicationDto.setStatus(1);
+        applicationDto.setDownloads(0L);
         applicationDto.setStorageCapacity(request.getStorageCapacity());
         Application application = Application.fromDTO(applicationDto);
         application.setDeveloper(developerService.findById(request.getAuthorId()));

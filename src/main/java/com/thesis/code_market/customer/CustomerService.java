@@ -53,6 +53,7 @@ public class CustomerService {
 
     @SuppressWarnings("null")
     public void add(Customer customer) {
+        customer.setAvatar("http://127.0.0.1:9000/resources/avt/avataaars.png");
         customer.setPassword(passwordEncoder.encode(customer.getPassword())); // Hash password before saving
         User savedUser = this.customerRepository.save(customer);
         Cart cart = new Cart();

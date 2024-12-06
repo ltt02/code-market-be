@@ -160,6 +160,21 @@ public class OrderService {
                 .toList();
     }
 
+    public Map<String, Object> separateTimeAndAmount(List<OrderAmountByPeriodDTO> data) {
+        List<String> times = new ArrayList<>();
+        List<Float> amounts = new ArrayList<>();
+
+        for (OrderAmountByPeriodDTO record : data) {
+            times.add(record.getTime()); // Thêm thời gian
+            amounts.add(record.getAmount()); // Thêm số tiền, chuyển sang String nếu cần
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("time", times);
+        result.put("amount", amounts);
+        return result;
+    }
+
     public List<OrderAmountByPeriodDTO> sumTotalGroupBy(String period, Date startDate, Date endDate) {
         switch (period) {
             case "week" -> {

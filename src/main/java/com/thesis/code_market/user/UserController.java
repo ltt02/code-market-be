@@ -133,7 +133,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update-info")
     public ResponseEntity<?> updateInfo(@PathVariable Long id, @RequestBody UserDTO request) {
         return new ResponseEntity<>(this.userService.updateInfo(id, request), HttpStatus.OK);
     }

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customers/{customerId}/orders")
@@ -83,9 +84,10 @@ public class OrderController {
         return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
-    @GetMapping("/amount-chart")
-    public List<OrderAmountByPeriodDTO> sumTotalGroupBy(@RequestBody OrderAmountByPeriodRequest request) {
-        return this.orderService.sumTotalGroupBy(request.getPeriod(), request.getStartDate(), request.getEndDate());
+    @PostMapping("/amount-chart")
+    public Map<String, Object> sumTotalGroupBy(@RequestBody OrderAmountByPeriodRequest request) {
+        List<OrderAmountByPeriodDTO> result = this.orderService.sumTotalGroupBy(request.getPeriod(), request.getStartDate(), request.getEndDate());
+        return this.orderService.separateTimeAndAmount(result);
     }
 
 }
